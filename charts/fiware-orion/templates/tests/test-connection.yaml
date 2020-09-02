@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "fiware-orion.fullname" . }}-test-connection"
+  labels:
+    {{- include "fiware-orion.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget-orion
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "fiware-orion.broker.fullname" . }}:{{ .Values.broker.service.port }}']
+{{ if .Values.mongoexpress.enabled }}
+    - name: wget-mongoexpress
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "fiware-orion.mongoexpress.fullname" . }}:{{ .Values.mongoexpress.service.port }}']
+{{ end }}
+  restartPolicy: Never

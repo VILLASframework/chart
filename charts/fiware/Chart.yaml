@@ -1,0 +1,83 @@
+apiVersion: v2
+name: fiware
+description: FIWARE Stack
+icon: https://packages.fein-aachen.org/helm/icons/fiware.png
+
+keywords:
+- fiware
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+version: 0.1.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application.
+appVersion: 0.1.0
+
+dependencies:
+- name: fiware-iota-json
+  version: 0.1.0
+  repository: https://packages.fein-aachen.org/helm/charts
+  condition: iotagent.json.enabled
+#   tags: # (optional)
+#     - Tags can be used to group charts for enabling/disabling together
+#   enabled: (optional) Enabled bool determines if chart should be loaded
+#   import-values: # (optional)
+#     - ImportValues holds the mapping of source values to parent key to be imported. Each item can be a string or pair of child/parent sublist items.
+#   alias: (optional) Alias usable alias to be used for the chart. Useful when you have to add the same chart multiple times
+- name: fiware-iota-ul
+  version: 0.1.0
+  repository: https://packages.fein-aachen.org/helm/charts
+  condition: iotagent.ul.enabled
+
+- name: fiware-iota-lorawan
+  version: 0.1.0
+  repository: https://packages.fein-aachen.org/helm/charts
+  condition: iotagent.lorawan.enabled
+
+- name: fiware-iota-lightweightm2m
+  version: 0.1.0
+  repository: https://packages.fein-aachen.org/helm/charts
+  condition: iotagent.lightweightm2m.enabled
+
+- name: fiware-orion
+  version: 0.1.0
+  repository: https://packages.fein-aachen.org/helm/charts
+  condition: orion.enabled
+
+- name: fiware-wilma
+  version: 0.1.0
+  repository: https://packages.fein-aachen.org/helm/charts
+  condition: wilma.enabled
+
+- name: fiware-keyrock
+  version: 0.1.0
+  repository: https://packages.fein-aachen.org/helm/charts
+  condition: keyrock.enabled
+
+- name: fiware-quantumleap
+  version: 0.1.0
+  repository: https://packages.fein-aachen.org/helm/charts
+  condition: quantumleap.enabled
+
+- name: fiware-wirecloud
+  version: 0.1.0
+  repository: https://packages.fein-aachen.org/helm/charts
+  condition: wirecloud.enabled
+
+maintainers:
+- name: Steffen Vogel
+  email: svogel2@eonerc.rwth-aachen.de
+  url: https://www.steffenvogel.de
+- name: Stefan Dähling
+  email: sdaehling@eonerc.rwth-aachen.de

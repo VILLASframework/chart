@@ -1,0 +1,155 @@
+# Default values for fiware-orion.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+imagePullSecrets: []
+
+broker:
+  replicaCount: 1
+
+  version: ngsi-v2
+  # version: ngsi-ld
+
+  image:
+
+    repository: fiware/orion
+    tag: 2.3.0
+    
+    # repository: fiware/orion-ld
+    # tag: 0.1.1
+
+    pullPolicy: IfNotPresent
+
+  nameOverride: ""
+  fullnameOverride: ""
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      eonerc.rwth-aachen.de/description: FIWARE Orion Contex Broker
+      eonerc.rwth-aachen.de/link: https://git.rwth-aachen.de/acs/public/deployment/fiware-stack
+    hosts:
+      - host: ocb.fiware.k8s.eonerc.rwth-aachen.de
+        paths:
+          - /
+    tls:
+      - secretName: letsencrypt-prod-orion
+        hosts:
+          - ocb.fiware.k8s.eonerc.rwth-aachen.de
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+mongodb:
+  enabled: true
+
+  replicaSet:
+    enabled: true
+
+  usePassword: true
+  password: admin
+  existingSecret: fiware-orion-mongodb
+
+  persistence:
+    storageClass: managed-nfs-storage
+
+  # Put here more Chart settings as described here:
+  # https://hub.helm.sh/charts/bitnami/mongodb
+
+mongoexpress:
+  enabled: true
+
+  usePassword: true
+  password: admin
+  existingSecret: fiware-orion-mongoexpress
+
+  replicaCount: 1
+
+  image:
+    repository: mongo-express
+    tag: 0.49.0
+    pullPolicy: IfNotPresent
+
+  nameOverride: ""
+  fullnameOverride: ""
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      eonerc.rwth-aachen.de/description: FIWARE Mongo Express
+      eonerc.rwth-aachen.de/link: https://git.rwth-aachen.de/acs/public/deployment/fiware-stack
+    hosts:
+      - host: mongo.fiware.k8s.eonerc.rwth-aachen.de
+        paths:
+          - /
+    tls:
+      - secretName: letsencrypt-prod-mogno-express
+        hosts:
+          - mongo.fiware.k8s.eonerc.rwth-aachen.de
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "fiware-iota-json.fullname" . }}-test-connection"
+  labels:
+{{ include "fiware-iota-json.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "fiware-iota-json.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

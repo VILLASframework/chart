@@ -1,0 +1,31 @@
+# Default values for fiware.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+orion:
+  enabled: true
+
+iotagent:
+  json:
+    enabled: false
+  ul:
+    enabled: false
+  lorawan:
+    enabled: false
+  lightweightm2m:
+    enabled: false
+
+wirecloud:
+  enabled: false
+
+quantumleap:
+  enabled: false
+
+cygnus:
+  enabled: false
+
+wilma:
+  enabled: false
+
+keyrock:
+  enabled: false

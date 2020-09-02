@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fiware-iota-json.fullname" . }}
+  labels:
+    {{- include "fiware-iota-json.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "fiware-iota-json.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "fiware-iota-json.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "fiware-iota-json.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 4041
+              name: port-north
+            - containerPort: 7896
+              name: port-south
+          env:
+          - name: IOTA_CB_HOST
+            value: "orion"
+          - name: IOTA_CB_PORT
+            value: "1026"
+          - name: IOTA_NORTH_PORT
+            value: "4041"
+          - name: IOTA_REGISTRY_TYPE
+            value: "mongodb"
+          - name: IOTA_LOG_LEVEL
+            value: "DEBUG"
+          - name: IOTA_TIMESTAMP
+            value: "true"
+          - name: IOTA_CB_NGSI_VERSION
+            value: "v2"
+          - name: IOTA_MONGO_HOST
+            value: "mongodb"
+          - name: IOTA_MONGO_PORT
+            value: "27017"
+          - name: IOTA_MONGO_DB
+            value: "iotagentjson"
+          - name: IOTA_MQTT_HOST
+            value: "mosquitto"
+          - name: IOTA_MQTT_PORT
+            value: "1883"
+          - name: IOTA_PROVIDER_URL
+          value: "http://iotajson:4041"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
