@@ -1,0 +1,68 @@
+{
+	"components": [
+		{
+			"name": "Dummy Simulator #1",
+			"category": "simulator",
+			"type": "dummy",
+			"uuid": "e15f5ad4-041f-11e8-9bf3-23372608bf60",
+			"location": "Steffen's Laptop",
+			"owner": "svo",
+			"endpoint": "/ws/ws_sig"
+		},
+		{
+			"name": "Dummy Simulator #2",
+			"category": "simulator",
+			"type": "dummy",
+			"uuid": "ef6f6e46-044e-11e8-812f-17b6617a2f37",
+			"location": "Markus' Laptop",
+			"owner": "mgr"
+		},
+		{
+			"name": "Central VILLASnode",
+			"category": "gateway",
+			"type": "villas-node",
+			"autostart": false,
+			"api": "http://host.docker.internal:8080"
+		},
+		{
+			"name": "Kubernetes Controller",
+			"category": "controller",
+			"type": "kubernetes",
+			"config" : {
+				"host" : "host.docker.internal:8081",
+				"verify_ssl" : false,
+				"api_key" : {
+					"authorization" : "Bearer XXX"
+				}
+			},
+			"namespace" : "sim",
+			"spec": {
+				"apiVersion": "batch/v1",
+				"kind": "Job",
+				"metadata": {
+					"name": "pi"
+				},
+				"spec": {
+					"template": {
+						"spec": {
+							"containers": [
+								{
+									"name": "pi",
+									"image": "perl",
+									"command": [
+										"perl",
+										"-Mbignum=bpi",
+										"-wle",
+										"print bpi(2000)"
+									]
+								}
+							],
+							"restartPolicy": "Never"
+						}
+					},
+					"backoffLimit": 4
+				}
+			}
+		}
+	]
+}

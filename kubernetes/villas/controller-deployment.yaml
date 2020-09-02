@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+  name: controller
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: controller
+    spec:
+      containers:
+      - name: controller
+        image: registry.git.rwth-aachen.de/acs/public/villas/controller:demo-v0.1
+        command: [ "villas-ctl" ]
+        args: [
+          "-b", "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@broker/%2F",
+          "-c", "/etc/villas/controller/config.json", "daemon"
+        ]
+        volumeMounts:
+        - mountPath: /etc/villas/controller/
+          name: config
+        env:
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-credentials
+              key: username
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-credentials
+              key: password
+      volumes:
+      - name: config
+        configMap:
+          name: controller-config

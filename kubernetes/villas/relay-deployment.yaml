@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: relay
+    app.kubernetes.io/part-of: villas-node
+  name: relay
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: relay
+      app.kubernetes.io/part-of: villas-node
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: relay
+        app.kubernetes.io/part-of: villas-node
+    spec:
+      containers:
+      - args:
+        - relay
+        image: registry.git.rwth-aachen.de/acs/public/villas/node:demo-v0.3
+        name: relay
+        securityContext:
+          privileged: true
+        ports:
+        - name: http
+          containerPort: 8088
+        livenessProbe:
+          httpGet:
+            path: /api/v1
+            port: 8088
+          initialDelaySeconds: 3
+          periodSeconds: 3

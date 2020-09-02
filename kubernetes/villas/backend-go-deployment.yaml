@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: backend-go
+    app.kubernetes.io/part-of: villas-web
+  name: backend-go
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: backend-go
+      app.kubernetes.io/part-of: villas-web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: backend-go
+        app.kubernetes.io/part-of: villas-web
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: kubernetes-worker-7
+      imagePullSecrets:
+      - name: stvogel-rwth-pull-secret
+      containers:
+      - name: backend-go
+        image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:f4cb42b7
+        command: [ "villasweb-backend" ]
+        env:
+        - name: MODE
+          value: release
+        - name: BASE_HOST
+          value: villas-new.k8s.fein-aachen.org
+        - name: DB_NAME
+          value: villas
+        - name: DB_HOST
+          value: postgresql.postgresql
+        - name: AMQP_USER
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-credentials
+              key: username
+        - name: AMQP_PASS
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-credentials
+              key: password
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: username
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: password
+        - name: AMQP_HOST
+          value: broker/%2F
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        ports:
+        - name: http
+          containerPort: 4000

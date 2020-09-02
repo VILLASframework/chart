@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: frontend-new
+    app.kubernetes.io/part-of: villas-web
+  name: frontend-new
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector:
+    app.kubernetes.io/component: frontend-new
+    app.kubernetes.io/part-of: villas-web

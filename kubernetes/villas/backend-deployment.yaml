@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: villas-web
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: backend
+      app.kubernetes.io/part-of: villas-web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/part-of: villas-web
+    spec:
+      containers:
+      - env:
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-credentials
+              key: username
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-credentials
+              key: password
+        - name: MONGODB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-credentials
+              key: username
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-credentials
+              key: password
+        - name: AMQP_ENDPOINT
+          value: amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@broker/%2F
+        - name: DATABASE_URL
+          value: mongodb://$(MONGODB_USERNAME):$(MONGODB_PASSWORD)@database:27017/
+        - name: DEFAULT_ADMIN
+          value: "true"
+        - name: LOG_FILE
+          value: villasweb-backend_log.txt
+        - name: LOG_LEVEL
+          value: info
+        - name: NODE_ENV
+          value: dotenv
+        image: registry.git.rwth-aachen.de/acs/public/villas/web-backend:demo-v0.1
+        name: backend
+        volumeMounts:
+        - mountPath: /usr/src/app/public/
+          name: files
+        livenessProbe:
+          httpGet:
+            path: /api/v1/counts
+            port: 4000
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        ports:
+        - name: http
+          containerPort: 4000
+      volumes:
+      - name: files
+        persistentVolumeClaim:
+          claimName: backend-files

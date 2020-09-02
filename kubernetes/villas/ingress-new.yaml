@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: demo-new
+  labels:
+    app.kubernetes.io/part-of: villas-web
+  annotations:  
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    eonerc.rwth-aachen.de/description: VILLASweb
+    eonerc.rwth-aachen.de/link: https://git.rwth-aachen.de/acs/public/villas/VILLASweb
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+  - host: villas-new.k8s.eonerc.rwth-aachen.de
+    http:
+      paths:
+      - backend:
+          serviceName: frontend-new
+          servicePort: http
+        path: /.*
+        pathType: ImplementationSpecific
+      - backend:
+          serviceName: frontend-new
+          servicePort: http
+        path: /(static/.*)
+        pathType: ImplementationSpecific
+      - backend:
+          serviceName: backend-go
+          servicePort: http
+        path: /(api/.*)
+        pathType: ImplementationSpecific
+      - backend:
+          serviceName: broker
+          servicePort: web-admin
+        path: /(rabbitmq/.*)
+        pathType: ImplementationSpecific
+      - backend:
+          serviceName: backend-go
+          servicePort: http
+        path: /(swagger/.*)
+        pathType: ImplementationSpecific
+      - backend:
+          serviceName: relay
+          servicePort: http
+        path: /ws/relay/(.*)
+        pathType: ImplementationSpecific
+      - backend:
+          serviceName: node
+          servicePort: http
+        path: /ws/(.*)
+        pathType: ImplementationSpecific
+      - backend:
+          serviceName: node
+          servicePort: http
+        path: /mockup/(.*)
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - villas-new.k8s.eonerc.rwth-aachen.de
+    secretName: letsencrypt-prod-villas-demo-new
+
