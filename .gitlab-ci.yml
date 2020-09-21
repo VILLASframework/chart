@@ -1,0 +1,60 @@
+variables:
+  CHART_DIR: charts
+  DEPLOY_PATH: https://files.fein-aachen.org/packages/helm/charts
+  DEPLOY_URL: https://packages.fein-aachen.org/helm/charts
+  DEPLOY_USER: static-data
+  DEPLOY_PASS: changme
+
+stages:
+  - test
+  - package
+  - deploy
+
+lint:
+  image:
+    name: linkyard/docker-helm
+    entrypoint: ["/bin/sh", "-c"]
+  stage: test
+  script:
+    - helm lint ${CHART_DIR}/*
+  tags:
+    - docker
+
+repo:
+  image:
+    name: linkyard/docker-helm
+    entrypoint: ["/bin/sh", "-c"]
+  stage: package
+  before_script:
+    - helm init --client-only
+  script:
+    - mkdir -p ./public
+    - wget ${DEPLOY_URL}/index.yaml -O ./public/index.yaml
+    - helm package
+        --destination ./public
+        ${CHART_DIR}/*
+    - helm repo index
+        --url ${DEPLOY_URL}
+        --merge public/index.yaml .
+    - mv index.yaml ./public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+  tags:
+    - docker
+
+upload:
+  stage: deploy
+  image:
+    name: rclone/rclone:1.50
+    entrypoint: [""]
+  before_script:
+    - rclone config create fein webdav url ${DEPLOY_PATH} vendor other user ${DEPLOY_USER} pass ${DEPLOY_PASS}
+  script:
+    - rclone copy ./public fein:packages/helm/charts
+  dependencies:
+    - repo
+  tags:
+    - docker
