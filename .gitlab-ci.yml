@@ -1,8 +1,8 @@
 variables:
   CHART_DIR: charts
-  DEPLOY_PATH: https://files.fein-aachen.org/packages/helm/charts
+  DEPLOY_PATH: https://files.fein-aachen.org/
   DEPLOY_URL: https://packages.fein-aachen.org/helm/charts
-  DEPLOY_USER: static-data
+  DEPLOY_USER: webdav
   DEPLOY_PASS: changme
 
 stages:
