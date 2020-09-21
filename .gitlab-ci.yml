@@ -52,6 +52,7 @@ upload:
     entrypoint: [""]
   before_script:
     - rclone config create fein webdav url ${DEPLOY_PATH} vendor other user ${DEPLOY_USER} pass ${DEPLOY_PASS}
+    - rclone config show
   script:
     - rclone copy ./public fein:packages/helm/charts
   dependencies:
