@@ -58,3 +58,5 @@ upload:
     - repo
   tags:
     - docker
+  only:
+    - master
