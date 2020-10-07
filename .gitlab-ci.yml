@@ -55,6 +55,7 @@ upload:
     - rclone config show
   script:
     - rclone copy ./public fein:packages/helm/charts
+    - rclone copy ./doc/pictures/logos fein:packages/helm/icons
   dependencies:
     - repo
   tags:
