@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: "{{ include "villas.fullname" . }}-broker"
   labels:
     app.kubernetes.io/component: broker
-    app.kubernetes.io/part-of: villas-controller
-  name: broker
+    {{- include "villas.labels" . | nindent 4 }}
 spec:
   ports:
   - name: web-admin
@@ -18,4 +18,3 @@ spec:
     targetPort: 1883
   selector:
     app.kubernetes.io/component: broker
-    app.kubernetes.io/part-of: villas-controller

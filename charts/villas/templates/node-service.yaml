@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: "{{ include "villas.fullname" . }}-node"
   labels:
     app.kubernetes.io/component: node
-  name: node
+    {{- include "villas.labels" . | nindent 4 }}
 spec:
   ports:
   - name: http
     port: 80
-    targetPort: 80
+    targetPort: 8080
   - name: sim-data-12000
     port: 12000
     protocol: UDP

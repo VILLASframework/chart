@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ include "villas.fullname" . }}-controller-config"
+  labels:
+		app.kubernetes.io/component: controller
+    {{- include "villas.labels" . | nindent 4 }}
+data:
+{{ (.Files.Glob "etc/villas/controller/*").AsConfig | indent 2 }}

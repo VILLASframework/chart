@@ -1,9 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: "{{ include "villas.fullname" . }}-node"
   labels:
     app.kubernetes.io/component: node
-  name: node
+    {{- include "villas.labels" . | nindent 4 }}
 spec:
   strategy:
     type: Recreate
@@ -20,9 +21,10 @@ spec:
         - node
         - /etc/villas/node/demo.conf
         image: registry.git.rwth-aachen.de/acs/public/villas/node:demo-v0.3
+				imagePullPolicy: Always
         name: node
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         - containerPort: 12000
           protocol: UDP
         - containerPort: 12001
@@ -54,8 +56,8 @@ spec:
           name: data
         livenessProbe:
           httpGet:
-            path: /
-            port: 80
+            path: /api/v2/capabilities
+            port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
       volumes:
