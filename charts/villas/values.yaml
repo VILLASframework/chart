@@ -15,16 +15,16 @@ nameOverride: ""
 fullnameOverride: ""
 
 ingress:
-	enabled: true
+  enabled: true
 
 web:
-	enabled: true
+  enabled: true
 
 database:
-	enabled: true
+  enabled: true
 
 node:
-	enabled: true
+  enabled: true
 
 relay:
-	enabled: true
+  enabled: true
