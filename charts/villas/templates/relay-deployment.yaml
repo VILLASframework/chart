@@ -18,7 +18,7 @@ spec:
       - args:
         - relay
         image: registry.git.rwth-aachen.de/acs/public/villas/node:demo-v0.3
-				imagePullPolicy: Always
+        imagePullPolicy: Always
         name: relay
         securityContext:
           privileged: true

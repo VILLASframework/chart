@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - image: registry.git.rwth-aachen.de/acs/public/villas/web:ae53a167
-			  imagePullPolicy: Always
+        imagePullPolicy: Always
         name: frontend
         ports:
         - containerPort: 5000

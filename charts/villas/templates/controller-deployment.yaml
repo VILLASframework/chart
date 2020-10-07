@@ -17,7 +17,7 @@ spec:
       containers:
       - name: controller
         image: registry.git.rwth-aachen.de/acs/public/villas/controller:demo-v0.1
-				imagePullPolicy: Always
+        imagePullPolicy: Always
         command: [ "villas-ctl" ]
         args: [
           "-b", "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@broker/%2F",

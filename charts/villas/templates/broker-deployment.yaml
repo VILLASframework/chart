@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - image: registry.git.rwth-aachen.de/acs/public/villas/demo/broker:demo-v0.1
-				imagePullPolicy: Always
+        imagePullPolicy: Always
         name: broker
         env:
         - name: RABBITMQ_NODE_PORT

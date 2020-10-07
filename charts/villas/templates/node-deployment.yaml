@@ -21,7 +21,7 @@ spec:
         - node
         - /etc/villas/node/demo.conf
         image: registry.git.rwth-aachen.de/acs/public/villas/node:demo-v0.3
-				imagePullPolicy: Always
+        imagePullPolicy: Always
         name: node
         ports:
         - containerPort: 8080

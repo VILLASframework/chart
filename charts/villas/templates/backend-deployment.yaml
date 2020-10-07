@@ -21,7 +21,7 @@ spec:
       containers:
       - name: backend
         image: registry.git.rwth-aachen.de/acs/public/villas/web-backend:f4cb42b7
-				imagePullPolicy: Always
+        imagePullPolicy: Always
         command: [ "villasweb-backend" ]
         env:
         - name: MODE
