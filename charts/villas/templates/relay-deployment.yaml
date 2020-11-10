@@ -1,3 +1,4 @@
+{{ if .Values.relay.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,11 +16,11 @@ spec:
         app.kubernetes.io/component: relay
     spec:
       containers:
-      - args:
+      - name: relay
+        args:
         - relay
-        image: registry.git.rwth-aachen.de/acs/public/villas/node:demo-v0.3
+        image: {{ .Values.relay.image }}
         imagePullPolicy: Always
-        name: relay
         securityContext:
           privileged: true
         ports:
@@ -31,3 +32,27 @@ spec:
             port: 8088
           initialDelaySeconds: 3
           periodSeconds: 3
+      - name: controller
+        image: {{ .Values.controller.image }}
+        imagePullPolicy: Always
+        command: [ "villas-controller" ]
+        args: [
+          "-b", "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@{{ include "villas.fullname" . }}-broker/%2F",
+          "-c", "/etc/villas/controller.json", "daemon"
+        ]
+        volumeMounts:
+        - mountPath: /etc/villas/
+          name: config
+        env:
+        - name: RABBITMQ_USERNAME
+          value: "{{ .Values.broker.auth.username }}"
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "broker.secretName" . }}
+              key: rabbitmq-password
+      volumes:
+      - name: config
+        configMap:
+          name: "{{ include "villas.fullname" . }}-relay"
+{{ end }}

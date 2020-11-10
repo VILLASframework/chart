@@ -1,3 +1,4 @@
+{{ if .Values.node.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,40 +18,23 @@ spec:
         app.kubernetes.io/component: node
     spec:
       containers:
-      - args:
-        - node
-        - /etc/villas/node/demo.conf
-        image: registry.git.rwth-aachen.de/acs/public/villas/node:demo-v0.3
+      - name: node
+        args: [ "node", "/etc/villas/node.json" ]
+        image: {{ .Values.node.image }}
         imagePullPolicy: Always
-        name: node
         ports:
         - containerPort: 8080
-        - containerPort: 12000
+{{ $start := int .Values.node.portOffset }}
+{{ $count := int .Values.node.portCount }}
+{{ $end := int (add $start $count) }}
+{{ range untilStep $start $end 1 }}
+        - containerPort: {{ . }}
           protocol: UDP
-        - containerPort: 12001
-          protocol: UDP
-        - containerPort: 12002
-          protocol: UDP
-        - containerPort: 12003
-          protocol: UDP
-        - containerPort: 12004
-          protocol: UDP
-        - containerPort: 12005
-          protocol: UDP
-        - containerPort: 12006
-          protocol: UDP
-        - containerPort: 12007
-          protocol: UDP
-        - containerPort: 12008
-          protocol: UDP
-        - containerPort: 12009
-          protocol: UDP
-        - containerPort: 12010
-          protocol: UDP
+{{ end }}
         securityContext:
           privileged: true
         volumeMounts:
-        - mountPath: /etc/villas/node/
+        - mountPath: /etc/villas/
           name: config
         - mountPath: /data
           name: data
@@ -60,10 +44,29 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+      - name: controller
+        image: {{ .Values.controller.image }}
+        imagePullPolicy: Always
+        args: [
+          "-b", "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@{{ include "villas.fullname" . }}-broker/%2F",
+          "-c", "/etc/villas/controller.json", "daemon"
+        ]
+        volumeMounts:
+        - mountPath: /etc/villas/
+          name: config
+        env:
+        - name: RABBITMQ_USERNAME
+          value: "{{ .Values.broker.auth.username }}"
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "broker.secretName" . }}
+              key: rabbitmq-password
       volumes:
       - name: config
         configMap:
-          name: node-config
+          name: "{{ include "villas.fullname" . }}-node"
       - name: data
         persistentVolumeClaim:
-          claimName: node-data
+          claimName: "{{ include "villas.fullname" . }}-node-data"
+{{ end }}

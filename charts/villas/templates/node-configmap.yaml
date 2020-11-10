@@ -1,9 +1,25 @@
+{{ if .Values.node.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "{{ include "villas.fullname" . }}-node-config"
+  name: "{{ include "villas.fullname" . }}-node"
   labels:
     {{- include "villas.labels" . | nindent 4 }}
 data:
-  demo.conf: |-
-{{ (.Files.Glob "etc/villas/node/*").AsConfig | indent 2 }}
+{{- $cfg := .Values.node.config -}}
+{{- $cfg := mergeOverwrite $cfg (dict "nodes" .Values.node.extraNodes) -}}
+{{- $cfg := mergeOverwrite $cfg (dict "paths" (concat .Values.node.config.paths .Values.node.extraPaths)) }}
+  node.json: |
+{{ toPrettyJson $cfg | indent 4 }}
+  controller.json: |
+    {
+      "components": [
+        {
+          "name": "VILLASnode",
+          "category": "controller",
+          "type": "villas-node",
+          "api_url": "http://localhost:8080"
+        }
+      ]
+    }
+{{ end }}

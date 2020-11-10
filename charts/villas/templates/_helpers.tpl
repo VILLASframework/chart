@@ -1,4 +1,3 @@
-{{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
@@ -62,3 +61,35 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "villas.controller.namespace" -}}
+{{- if .Values.controller.namespace -}}
+{{ .Values.controller.namespace }}
+{{- else -}}
+{{ .Release.Namespace }}-controller
+{{- end -}}
+{{- end }}
+
+{{/*
+Get the broker password secret.
+*/}}
+{{- define "broker.secretName" -}}
+    {{- if .Values.broker.auth.existingPasswordSecret -}}
+        {{- printf "%s" (tpl .Values.broker.auth.existingPasswordSecret $) -}}
+    {{- else -}}
+        {{- printf "%s" (include "villas.fullname" .) -}}-broker
+    {{- end -}}
+{{- end -}}
+
+{{/*
+Get the database password secret.
+*/}}
+{{- define "database.secretName" -}}
+{{- if .Values.global.postgresql.existingSecret }}
+    {{- printf "%s" (tpl .Values.global.postgresql.existingSecret $) -}}
+{{- else if .Values.database.existingSecret -}}
+    {{- printf "%s" (tpl .Values.database.existingSecret $) -}}
+{{- else -}}
+    {{- printf "%s" (include "villas.fullname" .) -}}-database
+{{- end -}}
+{{- end -}}

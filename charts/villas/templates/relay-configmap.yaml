@@ -1,0 +1,20 @@
+{{ if .Values.relay.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ include "villas.fullname" . }}-relay"
+  labels:
+    {{- include "villas.labels" . | nindent 4 }}
+data:
+  controller.json: |
+    {
+      "components": [
+        {
+          "name": "VILLASrelay",
+          "category": "controller",
+          "type": "villas-relay",
+          "api_url": "http://localhost:8088"
+        }
+      ]
+    }
+{{ end }}

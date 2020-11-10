@@ -16,7 +16,7 @@ type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.1.0
+version: 0.2.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
@@ -26,3 +26,16 @@ maintainers:
 - name: Steffen Vogel
   email: svogel2@eonerc.rwth-aachen.de
   url: https://www.steffenvogel.de
+
+dependencies:
+- name: rabbitmq
+  version: "7.8.0"
+  repository: "https://charts.bitnami.com/bitnami"
+  condition: "broker.enabled"
+  alias: broker
+
+- name: postgresql
+  version: "9.8.11"
+  repository: "https://charts.bitnami.com/bitnami"
+  condition: "database.enabled"
+  alias: database

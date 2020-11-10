@@ -1,3 +1,4 @@
+{{ if .Values.node.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -10,49 +11,15 @@ spec:
   - name: http
     port: 80
     targetPort: 8080
-  - name: sim-data-12000
-    port: 12000
+{{ $start := int .Values.node.portOffset }}
+{{ $count := int .Values.node.portCount }}
+{{ $end := int (add $start $count) }}
+{{ range untilStep $start $end 1 }}
+  - name: sim-data-{{ . }}
+    port: {{ . }}
     protocol: UDP
-    targetPort: 12000
-  - name: sim-data-12001
-    port: 12001
-    protocol: UDP
-    targetPort: 12001
-  - name: sim-data-12002
-    port: 12002
-    protocol: UDP
-    targetPort: 12002
-  - name: sim-data-12003
-    port: 12003
-    protocol: UDP
-    targetPort: 12003
-  - name: sim-data-12004
-    port: 12004
-    protocol: UDP
-    targetPort: 12004
-  - name: sim-data-12005
-    port: 12005
-    protocol: UDP
-    targetPort: 12005
-  - name: sim-data-12006
-    port: 12006
-    protocol: UDP
-    targetPort: 12006
-  - name: sim-data-12007
-    port: 12007
-    protocol: UDP
-    targetPort: 12007
-  - name: sim-data-12008
-    port: 12008
-    protocol: UDP
-    targetPort: 12008
-  - name: sim-data-12009
-    port: 12009
-    protocol: UDP
-    targetPort: 12009
-  - name: sim-data-12010
-    port: 12010
-    protocol: UDP
-    targetPort: 12010
+    targetPort: {{ . }}
+{{ end }}
   selector:
     app.kubernetes.io/component: node
+{{ end }}

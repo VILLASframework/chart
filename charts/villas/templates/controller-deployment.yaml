@@ -1,3 +1,4 @@
+{{ if .Values.controller.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,28 +17,26 @@ spec:
     spec:
       containers:
       - name: controller
-        image: registry.git.rwth-aachen.de/acs/public/villas/controller:demo-v0.1
+        image: {{ .Values.controller.image }}
         imagePullPolicy: Always
-        command: [ "villas-ctl" ]
+        # command: [ ]
         args: [
-          "-b", "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@broker/%2F",
-          "-c", "/etc/villas/controller/config.json", "daemon"
+          "-b", "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@{{ include "villas.fullname" . }}-broker/%2F",
+          "-c", "/etc/villas/controller.json", "daemon"
         ]
         volumeMounts:
-        - mountPath: /etc/villas/controller/
+        - mountPath: /etc/villas/
           name: config
         env:
         - name: RABBITMQ_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: rabbitmq-credentials
-              key: username
+          value: "{{ .Values.broker.auth.username }}"
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: rabbitmq-credentials
-              key: password
+              name: {{ include "broker.secretName" . }}
+              key: rabbitmq-password
       volumes:
       - name: config
         configMap:
-          name: controller-config
+          name: "{{ include "villas.fullname" . }}-controller"
+{{ end }}

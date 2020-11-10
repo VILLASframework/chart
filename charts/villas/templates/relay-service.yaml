@@ -1,3 +1,4 @@
+{{ if .Values.relay.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -8,7 +9,8 @@ metadata:
 spec:
   ports:
   - name: http
-    port: 8088
+    port: 80
     targetPort: 8088
   selector:
     app.kubernetes.io/component: relay
+{{ end }}
