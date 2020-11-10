@@ -11,9 +11,7 @@ stages:
   - deploy
 
 lint:
-  image:
-    name: linkyard/docker-helm
-    entrypoint: ["/bin/sh", "-c"]
+  image: registry.git.rwth-aachen.de/acs/internal/cloud/kubernetes/deployment
   stage: test
   script:
     - helm lint ${CHART_DIR}/*
@@ -21,9 +19,7 @@ lint:
     - docker
 
 repo:
-  image:
-    name: linkyard/docker-helm
-    entrypoint: ["/bin/sh", "-c"]
+  image: registry.git.rwth-aachen.de/acs/internal/cloud/kubernetes/deployment
   stage: package
   before_script:
     - helm init --client-only
