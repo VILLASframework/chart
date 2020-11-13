@@ -21,8 +21,6 @@ lint:
 repo:
   image: registry.git.rwth-aachen.de/acs/internal/cloud/kubernetes/deployment
   stage: package
-  before_script:
-    - helm init --client-only
   script:
     - mkdir -p ./public
     - wget ${DEPLOY_URL}/index.yaml -O ./public/index.yaml
