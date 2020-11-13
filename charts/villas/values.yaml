@@ -123,7 +123,7 @@ controller:
 database:
   # Set to false for using an external broker
   # If so, provide the connection details in broker.external
-  enabled: false
+  enabled: true
 
   # external:
   #   hostname: postgresql.postgresql
@@ -138,7 +138,7 @@ database:
 broker:
   # Set to false for using an external broker
   # If so, provide the connection details in broker.external
-  enabled: false
+  enabled: true
 
   # external:
   #   hostname: broker.villas-demo

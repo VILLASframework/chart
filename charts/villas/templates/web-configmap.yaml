@@ -5,6 +5,7 @@ base:
   host: {{ .Values.ingress.host }}
 admin:
   user: {{ .Values.web.admin.username }}
+  mail: {{ .Values.web.admin.mail }}
 amqp:
 {{- if .Values.broker.enabled }}
   host: {{ include "villas.fullname" . }}-broker/%2F
