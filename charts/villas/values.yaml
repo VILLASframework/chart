@@ -1,7 +1,3 @@
-# Default values for villas.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -112,12 +108,10 @@ controller:
   rbac:
     enabled: true
 
-  # uuid: null # Autogenerate UUID
-  uuid: c2d941d8-25d7-11eb-b4bc-5f7c0fb7f01c
+  uuid: null # Autogenerate UUID
   logLevel: info
   name: Kubernetes Controller
   namespace: villas-controller
-  uuid:
 
   image: registry.git.rwth-aachen.de/acs/public/villas/controller:latest
 
@@ -129,27 +123,27 @@ controller:
 database:
   # Set to false for using an external broker
   # If so, provide the connection details in broker.external
-  enabled: true
+  enabled: false
 
   # external:
-  #   hostname: rabbitmq.services.svc.cluster.local
+  #   hostname: postgresql.postgresql
   #   name: villas
   #   username: villas
-  #   password: test123
+  #   password: XXXX
 
   postgresqlUsername: villas
   postgresqlDatabase: villas
-  postgresqlPassword: Zm6htoavqh
+  postgresqlPassword: XXXX
 
 broker:
   # Set to false for using an external broker
   # If so, provide the connection details in broker.external
-  enabled: true
+  enabled: false
 
   # external:
-  #   hostname: rabbitmq.services.svc.cluster.local
-  #   username: villas
-  #   password: test123
+  #   hostname: broker.villas-demo
+  #   username: admin
+  #   password: XXXX
 
   extraPlugins: rabbitmq_mqtt
 
@@ -163,4 +157,3 @@ broker:
     username: villas
     password: uzH48bBskn
     erlangCookie: Uy2RmPBj66F7fTZ8Bx66eKb1xOOoZTyv
-
