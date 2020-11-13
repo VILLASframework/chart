@@ -24,7 +24,7 @@ version: 0.1.0
 # incremented each time you make changes to the application.
 appVersion: 0.1.0
 
-dependencies:
+# dependencies:
 # - name: fiware-iota-json
 #   version: 0.1.0
 #   repository: https://packages.fein-aachen.org/helm/charts

@@ -24,14 +24,14 @@ version: 0.1.0
 # incremented each time you make changes to the application.
 appVersion: 0.7.0
 
-dependencies:
-- name: crate
-  version: 0.1.0
-  repository: "@stable"
-- name: grafana
-  version: 4.5.0
-  repository: "@stable"
-  condition: grafana.enabled
+# dependencies:
+# - name: crate
+#   version: 0.1.0
+#   repository: "@stable"
+# - name: grafana
+#   version: 4.5.0
+#   repository: "@stable"
+#   condition: grafana.enabled
 
 maintainers:
 - name: Steffen Vogel
