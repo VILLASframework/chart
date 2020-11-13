@@ -1,4 +1,5 @@
 {{ if .Values.node.enabled }}
+{{- $uuid := include "villas.uuid" (dict "global" . "component" "node") -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,11 +7,13 @@ metadata:
   labels:
     {{- include "villas.labels" . | nindent 4 }}
 data:
-{{- $cfg := .Values.node.config -}}
-{{- $cfg := mergeOverwrite $cfg (dict "nodes" .Values.node.extraNodes) -}}
-{{- $cfg := mergeOverwrite $cfg (dict "paths" (concat .Values.node.config.paths .Values.node.extraPaths)) }}
+  uuid: {{ $uuid }}
+{{- $config := .Values.node.extraConfig -}}
+{{- $config := set $config "uuid" $uuid -}}
+{{- $config := set $config "nodes" (mergeOverwrite $config.nodes .Values.node.extraNodes) -}}
+{{- $config := set $config "paths" (concat         $config.paths .Values.node.extraPaths) }}
   node.json: |
-{{ toPrettyJson $cfg | indent 4 }}
+{{ toPrettyJson $config | indent 4 }}
   controller.json: |
     {
       "components": [

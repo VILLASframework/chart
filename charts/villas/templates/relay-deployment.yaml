@@ -17,8 +17,9 @@ spec:
     spec:
       containers:
       - name: relay
-        args:
-        - relay
+        args: [
+          "relay", "-u", "$(UUID)", "-d", "{{ .Values.relay.logLevel }}"
+        ]
         image: {{ .Values.relay.image }}
         imagePullPolicy: Always
         securityContext:
@@ -26,6 +27,12 @@ spec:
         ports:
         - name: http
           containerPort: 8088
+        env:
+        - name: UUID
+          valueFrom:
+            configMapKeyRef:
+              name: "{{ include "villas.fullname" . }}-relay"
+              key: uuid
         livenessProbe:
           httpGet:
             path: /api/v1
@@ -37,20 +44,31 @@ spec:
         imagePullPolicy: Always
         command: [ "villas-controller" ]
         args: [
-          "-b", "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@{{ include "villas.fullname" . }}-broker/%2F",
+          "-b", "amqp://$(AMQP_USER):$(AMQP_PASS)@$(AMQP_HOST)/%2F",
           "-c", "/etc/villas/controller.json", "daemon"
         ]
         volumeMounts:
         - mountPath: /etc/villas/
           name: config
         env:
-        - name: RABBITMQ_USERNAME
+{{- if .Values.broker.enabled }}
+        - name: AMQP_USER
           value: "{{ .Values.broker.auth.username }}"
-        - name: RABBITMQ_PASSWORD
+        - name: AMQP_HOST
+          value: "{{ include "villas.fullname" . }}-broker"
+        - name: AMQP_PASS
           valueFrom:
             secretKeyRef:
               name: {{ include "broker.secretName" . }}
               key: rabbitmq-password
+{{- else }}
+        - name: AMQP_USER
+          value: "{{ .Values.broker.external.username }}"
+        - name: AMQP_HOST
+          value: "{{ .Values.broker.external.hostname }}"
+        - name: AMQP_PASS
+          value: "{{ .Values.broker.external.password }}"
+{{- end }}
       volumes:
       - name: config
         configMap:

@@ -15,37 +15,36 @@ spec:
       labels:
         app.kubernetes.io/component: web-backend
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: kubernetes-worker-7
-      imagePullSecrets:
-      - name: stvogel-rwth-pull-secret
       containers:
       - name: backend
         image: {{ .Values.web.backend.image }}
         imagePullPolicy: Always
         command: [ "villasweb-backend" ]
+        args: [ "-config", "/etc/villas/config.yaml" ]
         env:
-        - name: MODE
-          value: release
-        - name: BASE_HOST
-          value: "{{ .Values.ingress.host }}"
-        - name: DB_NAME
-          value: {{ .Values.database.postgresqlDatabase }}
-        - name: DB_HOST
-          value: {{ include "villas.fullname" . }}-database
-        - name: DB_USER
-          value: "{{ .Values.database.postgresqlUsername }}"
         - name: DB_PASS
-          value: "{{ .Values.database.postgresqlPassword }}"
-        - name: AMQP_HOST
-          value: {{ include "villas.fullname" . }}-broker/%2F
-        - name: AMQP_USER
-          value: "{{ .Values.broker.auth.username }}"
+{{- if .Values.database.enabled }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "database.secretName" . }}
+              key: postgresql-password
+{{- else }}
+          value: {{ .Values.database.external.password | quote }}
+{{- end }}
         - name: AMQP_PASS
+{{- if .Values.broker.enabled }}
           valueFrom:
             secretKeyRef:
               name: {{ include "broker.secretName" . }}
               key: rabbitmq-password
+{{- else }}
+          value: {{ .Values.broker.external.password | quote }}
+{{- end }}
+        - name: ADMIN_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "villas.fullname" . }}-web
+              key: password
         livenessProbe:
           httpGet:
             path: /api/v2/healthz
@@ -55,4 +54,11 @@ spec:
         ports:
         - name: http
           containerPort: 4000
+        volumeMounts:
+        - mountPath: /etc/villas/
+          name: config
+      volumes:
+      - name: config
+        configMap:
+          name: "{{ include "villas.fullname" . }}-web"
 {{ end }}

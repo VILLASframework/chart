@@ -15,6 +15,12 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
+{{- if .Values.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: {{ .Values.ingress.tls.secretName }}
+{{- end }}
   rules:
   - host: {{ .Values.ingress.host }}
     http:
@@ -38,14 +44,14 @@ spec:
       - path: /(swagger/.*)
         pathType: ImplementationSpecific
         backend:
-          serviceName: backend
+          serviceName: "{{ include "villas.fullname" . }}-web-backend"
           servicePort: http
 {{ end }}
       - path: /(rabbitmq/.*)
         pathType: ImplementationSpecific
         backend:
-          serviceName: broker
-          servicePort: web-admin
+          serviceName: "{{ include "villas.fullname" . }}-broker"
+          servicePort: http-stats
 {{ if .Values.relay.enabled }}
       - path: /ws/relay/(.*)
         pathType: ImplementationSpecific
@@ -65,10 +71,4 @@ spec:
           serviceName: "{{ include "villas.fullname" . }}-node"
           servicePort: http
 {{ end }}
-{{- if .Values.ingress.tls.enabled }}
-  tls:
-  - hosts:
-    - {{ .Values.ingress.host }}
-    secretName: {{ .Values.ingress.tls.secretName }}
-{{- end }}
 {{- end }}

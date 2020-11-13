@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: node
-        args: [ "node", "/etc/villas/node.json" ]
+        args: [ "node", "-d", "{{ .Values.node.logLevel }}", "/etc/villas/node.json" ]
         image: {{ .Values.node.image }}
         imagePullPolicy: Always
         ports:
@@ -31,6 +31,12 @@ spec:
         - containerPort: {{ . }}
           protocol: UDP
 {{ end }}
+        env:
+        - name: UUID
+          valueFrom:
+            configMapKeyRef:
+              name: "{{ include "villas.fullname" . }}-node"
+              key: uuid
         securityContext:
           privileged: true
         volumeMounts:
@@ -48,20 +54,31 @@ spec:
         image: {{ .Values.controller.image }}
         imagePullPolicy: Always
         args: [
-          "-b", "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@{{ include "villas.fullname" . }}-broker/%2F",
+          "-b", "amqp://$(AMQP_USER):$(AMQP_PASS)@$(AMQP_HOST)/%2F",
           "-c", "/etc/villas/controller.json", "daemon"
         ]
         volumeMounts:
         - mountPath: /etc/villas/
           name: config
         env:
-        - name: RABBITMQ_USERNAME
+{{- if .Values.broker.enabled }}
+        - name: AMQP_USER
           value: "{{ .Values.broker.auth.username }}"
-        - name: RABBITMQ_PASSWORD
+        - name: AMQP_HOST
+          value: "{{ include "villas.fullname" . }}-broker"
+        - name: AMQP_PASS
           valueFrom:
             secretKeyRef:
               name: {{ include "broker.secretName" . }}
               key: rabbitmq-password
+{{- else }}
+        - name: AMQP_USER
+          value: "{{ .Values.broker.external.username }}"
+        - name: AMQP_HOST
+          value: "{{ .Values.broker.external.hostname }}"
+        - name: AMQP_PASS
+          value: "{{ .Values.broker.external.password }}"
+{{- end }}
       volumes:
       - name: config
         configMap:

@@ -1,0 +1,38 @@
+{{- define "villas.web.config" -}}
+mode: {{ .Values.web.mode }}
+port: 4000
+base:
+  host: {{ .Values.ingress.host }}
+admin:
+  user: {{ .Values.web.admin.username }}
+amqp:
+{{- if .Values.broker.enabled }}
+  host: {{ include "villas.fullname" . }}-broker/%2F
+  user: {{ .Values.broker.auth.username }}
+{{- else }}
+  host: {{ .Values.broker.external.hostname }}
+  user: {{ .Values.broker.external.username }}
+{{- end }}
+db:
+{{- if .Values.database.enabled }}
+  name: {{ .Values.database.postgresqlDatabase }}
+  host: {{ include "villas.fullname" . }}-database
+  user: {{ .Values.database.postgresqlUsername }}
+{{- else }}
+  name: {{ .Values.database.external.name }}
+  host: {{ .Values.database.external.hostname }}
+  user: {{ .Values.database.external.username }}
+{{- end }}
+{{- end -}}
+
+
+{{- if .Values.web.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ include "villas.fullname" . }}-web"
+  labels: {{ include "villas.labels" . | nindent 4 }}
+data:
+  config.yaml: |
+{{ toPrettyJson (mergeOverwrite (include "villas.web.config" . | fromYaml) .Values.web.extraConfig) | indent 4 }}
+{{ end }}

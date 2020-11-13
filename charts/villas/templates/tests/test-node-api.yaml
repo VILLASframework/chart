@@ -1,0 +1,24 @@
+{{- if .Values.node.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-node-api-test"
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: {{ .Release.Name }}-node-api-test
+      image: stedolan/jq
+      command:
+        - /bin/bash
+        - -ec
+        - |
+          wget -O- http://{{ template "villas.fullname" . }}-node/api/v2/status | jq -e '.state == "running" and .uuid == "$(UUID)"'
+      env:
+      - name: UUID
+        valueFrom:
+          configMapKeyRef:
+            name: "{{ include "villas.fullname" . }}-node"
+            key: uuid
+  restartPolicy: Never
+{{- end }}

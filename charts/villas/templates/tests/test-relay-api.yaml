@@ -1,0 +1,24 @@
+{{- if .Values.relay.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-relay-api-test"
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: {{ .Release.Name }}-relay-api-test
+      image: stedolan/jq
+      command:
+        - /bin/bash
+        - -ec
+        - |
+          wget -O- http://{{ template "villas.fullname" . }}-relay/api/v1 | jq -e '.uuid == "$(UUID)"'
+      env:
+      - name: UUID
+        valueFrom:
+          configMapKeyRef:
+            name: "{{ include "villas.fullname" . }}-relay"
+            key: uuid
+  restartPolicy: Never
+{{- end }}

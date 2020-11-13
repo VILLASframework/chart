@@ -1,4 +1,5 @@
 {{ if .Values.controller.enabled }}
+{{- $uuid := include "villas.uuid" (dict "global" . "component" "controller") -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,9 +7,15 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     {{- include "villas.labels" . | nindent 4 }}
+{{- with .Values.controller -}}
+{{- $comps := list (include "villas.controller.component" (set . "uuid" $uuid) | fromYaml) -}}
+{{- $comps := concat $comps .extraConfig.components -}}
+{{- $comps := concat $comps .extraComponents -}}
+{{- $config := .extraConfig -}}
+{{- $config := set $config "components" $comps }}
 data:
-{{- $cfg := .Values.controller.config -}}
-{{- $cfg := mergeOverwrite $cfg (dict "components" (concat $cfg.components .Values.controller.extraComponents)) }}
+  uuid: {{ $uuid }}
   controller.json: |
-{{ toPrettyJson $cfg | indent 4 }}
+{{ toPrettyJson $config | indent 4 }}
+{{ end }}
 {{ end }}

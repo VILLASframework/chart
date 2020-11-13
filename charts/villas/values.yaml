@@ -29,8 +29,20 @@ ingress:
 web:
   enabled: true
 
+  metrics:
+    enabled: true
+
+  mode: release
+
+  extraConfig: {}
+
+  admin:
+    username: admin
+    mail: admin@example.com
+
   backend:
-    image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:33eab641
+    # image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:33eab641
+    image: villas/web-backend-go:admin-init
 
   frontend:
     image: registry.git.rwth-aachen.de/acs/public/villas/web:723af74e
@@ -41,6 +53,9 @@ node:
 
   image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
 
+  uuid: null # Autogenerate UUID
+  logLevel: info
+
   portOffset: 12000
   portCount: 10
 
@@ -48,7 +63,7 @@ node:
     enabled: true
     size: 1Gi
 
-  config:
+  extraConfig:
     hugepages: 0
 
     http:
@@ -85,31 +100,56 @@ node:
 relay:
   enabled: true
 
+  uuid: null # Autogenerate UUID
+  logLevel: info
+  loopback: false
+
   image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
 
 controller:
   enabled: true
 
+  rbac:
+    enabled: true
+
+  # uuid: null # Autogenerate UUID
+  uuid: c2d941d8-25d7-11eb-b4bc-5f7c0fb7f01c
+  logLevel: info
+  name: Kubernetes Controller
+  namespace: villas-controller
+  uuid:
+
   image: registry.git.rwth-aachen.de/acs/public/villas/controller:latest
 
   extraComponents: []
 
-  config:
-    components:
-    - name: Kubernetes Controller
-      category: controller
-      type: kubernetes
-      namespace : villas-controller
+  extraConfig:
+    components: []
 
 database:
+  # Set to false for using an external broker
+  # If so, provide the connection details in broker.external
   enabled: true
+
+  # external:
+  #   hostname: rabbitmq.services.svc.cluster.local
+  #   name: villas
+  #   username: villas
+  #   password: test123
 
   postgresqlUsername: villas
-  postgresqlPassword: kasdhjflkasd
   postgresqlDatabase: villas
+  postgresqlPassword: Zm6htoavqh
 
 broker:
+  # Set to false for using an external broker
+  # If so, provide the connection details in broker.external
   enabled: true
+
+  # external:
+  #   hostname: rabbitmq.services.svc.cluster.local
+  #   username: villas
+  #   password: test123
 
   extraPlugins: rabbitmq_mqtt
 
@@ -120,8 +160,7 @@ broker:
       targetPort: mqtt
 
   auth:
-    username: user
-    password: x123
-
-    erlangCookie: YBog1yYYsL1PNuQBLFgAN3a2oc2a0Bej
+    username: villas
+    password: uzH48bBskn
+    erlangCookie: Uy2RmPBj66F7fTZ8Bx66eKb1xOOoZTyv
 

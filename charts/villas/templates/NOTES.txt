@@ -1,4 +1,21 @@
-1. Get the application URL by running these commands:
+{{- $webSecretName := include "villas.fullname" . | printf "%s-web" -}}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace $webSecretName -}}
+Congratulations! You deployed VILLASframework in your Kubernetes cluster.
+
 {{- if .Values.ingress.enabled }}
-  http{{ if .Values.ingress.tls.enabled }}s{{ end }}://{{ .Values.ingress.host }}/
+You can access the VILLASweb interface via the following URL:
+
+    http{{ if .Values.ingress.tls.enabled }}s{{ end }}://{{ .Values.ingress.host }}/
+
+To login use, run the following commands to get the login credentials of the admin user:
+
+{{- if $secret }}
+    User: {{ .Values.web.admin.username }}
+    Password: {{ $secret.data.password | b64dec }}
+{{- else }}
+    export ADMIN_USER={{ .Values.web.admin.username }}
+    export ADMIN_PASS=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ $webSecretName }} -o jsonpath="{.data.password}" | base64 --decode)
+{{- end }}
+
+Have fun!
 {{- end }}

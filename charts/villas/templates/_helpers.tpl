@@ -85,11 +85,34 @@ Get the broker password secret.
 Get the database password secret.
 */}}
 {{- define "database.secretName" -}}
-{{- if .Values.global.postgresql.existingSecret }}
-    {{- printf "%s" (tpl .Values.global.postgresql.existingSecret $) -}}
+{{- if .Values.database.global.postgresql.existingSecret }}
+    {{- printf "%s" (tpl .Values.database.global.postgresql.existingSecret $) -}}
 {{- else if .Values.database.existingSecret -}}
     {{- printf "%s" (tpl .Values.database.existingSecret $) -}}
 {{- else -}}
     {{- printf "%s" (include "villas.fullname" .) -}}-database
+{{- end -}}
+{{- end -}}
+
+{{- define "villas.controller.component" }}
+name: {{ .name }}
+uuid: {{ .uuid | default uuidv4 }}
+category: "controller"
+type: "kubernetes"
+namespace: {{ .namespace }}
+{{ end -}}
+
+{{- define "villas.uuid" -}}
+{{- $uuid := (get .global.Values .component).uuid -}}
+{{- if $uuid -}}
+    {{- $uuid -}}
+{{- else -}}
+    {{- $cmName := printf "%s-%s" (include "villas.fullname" .global) .component -}}
+    {{- $cm := lookup "v1" "ConfigMap" .global.Release.Namespace $cmName -}}
+    {{- if $cm -}}
+        {{- get $cm.data (.key | default "uuid") -}}
+    {{- else -}}
+        {{- uuidv4 -}}
+    {{- end -}}
 {{- end -}}
 {{- end -}}

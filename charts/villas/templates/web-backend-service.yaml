@@ -7,13 +7,14 @@ metadata:
     app.kubernetes.io/component: backend
     {{- include "villas.labels" . | nindent 4 }}
   annotations:
+{{- if .Values.web.metrics.enabled }}
     prometheus.io/scrape: 'true'
-    prometheus.io/port: '4000'
     prometheus.io/path: '/metrics'
+{{- end }}
 spec:
   ports:
   - name: http
-    port: 4000
+    port: 80
     targetPort: 4000
   selector:
     app.kubernetes.io/component: web-backend
