@@ -1,0 +1,89 @@
+{{ if .Values.node.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "villas.fullname" . }}-node"
+  labels:
+    app.kubernetes.io/component: node
+    {{- include "villas.labels" . | nindent 4 }}
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: node
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: node
+    spec:
+      containers:
+      - name: node
+        args: [ "node", "-d", "{{ .Values.node.logLevel }}", "/etc/villas/node.json" ]
+        image: {{ .Values.node.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+{{ $start := int .Values.node.portOffset }}
+{{ $count := int .Values.node.portCount }}
+{{ $end := int (add $start $count) }}
+{{ range untilStep $start $end 1 }}
+        - containerPort: {{ . }}
+          protocol: UDP
+{{ end }}
+        env:
+        - name: UUID
+          valueFrom:
+            configMapKeyRef:
+              name: "{{ include "villas.fullname" . }}-node"
+              key: uuid
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/villas/
+          name: config
+        - mountPath: /data
+          name: data
+        livenessProbe:
+          httpGet:
+            path: /api/v2/capabilities
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      - name: controller
+        image: {{ .Values.controller.image }}
+        imagePullPolicy: Always
+        args: [
+          "-b", "amqp://$(AMQP_USER):$(AMQP_PASS)@$(AMQP_HOST)/%2F",
+          "-c", "/etc/villas/controller.json", "daemon"
+        ]
+        volumeMounts:
+        - mountPath: /etc/villas/
+          name: config
+        env:
+{{- if .Values.broker.enabled }}
+        - name: AMQP_USER
+          value: "{{ .Values.broker.auth.username }}"
+        - name: AMQP_HOST
+          value: "{{ include "villas.fullname" . }}-broker"
+        - name: AMQP_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "broker.secretName" . }}
+              key: rabbitmq-password
+{{- else }}
+        - name: AMQP_USER
+          value: "{{ .Values.broker.external.username }}"
+        - name: AMQP_HOST
+          value: "{{ .Values.broker.external.hostname }}"
+        - name: AMQP_PASS
+          value: "{{ .Values.broker.external.password }}"
+{{- end }}
+      volumes:
+      - name: config
+        configMap:
+          name: "{{ include "villas.fullname" . }}-node"
+      - name: data
+        persistentVolumeClaim:
+          claimName: "{{ include "villas.fullname" . }}-node-data"
+{{ end }}

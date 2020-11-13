@@ -1,66 +1,159 @@
-# Default values for villas.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-replicaCount: 1
-
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  create: false
   name:
 
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-service:
-  type: ClusterIP
-  port: 80
+storageClass: rook-ceph-block
 
 ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths: []
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  enabled: true
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  host: villas.k8s.eonerc.rwth-aachen.de
 
-nodeSelector: {}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    eonerc.rwth-aachen.de/description: VILLASweb
+    eonerc.rwth-aachen.de/link: https://git.rwth-aachen.de/acs/public/villas/web
 
-tolerations: []
+  tls:
+    enabled: true
+    secretName: letsencrypt-prod-villas-demo
 
-affinity: {}
+web:
+  enabled: true
+
+  metrics:
+    enabled: true
+
+  mode: release
+
+  extraConfig: {}
+
+  admin:
+    username: admin
+    mail: admin@example.com
+
+  backend:
+    # image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:33eab641
+    image: villas/web-backend-go:admin-init
+
+  frontend:
+    image: registry.git.rwth-aachen.de/acs/public/villas/web:723af74e
+    replicas: 2
+
+node:
+  enabled: true
+
+  image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
+
+  uuid: null # Autogenerate UUID
+  logLevel: info
+
+  portOffset: 12000
+  portCount: 10
+
+  persistence:
+    enabled: true
+    size: 1Gi
+
+  extraConfig:
+    hugepages: 0
+
+    http:
+      htdocs: /usr/share/villas/node/web
+      port: 8080
+
+    logging:
+      level: info
+
+    nodes:
+      sig:
+        type: signal
+        signal: mixed
+        values: 5
+        rate: 20
+      lo:
+        type: loopback
+      ws_sig:
+        type: websocket
+      ws_lo:
+        type: websocket
+
+    paths:
+    - in: sig
+      out: ws_sig
+    - in: ws_lo
+      out: lo
+    - in: lo
+      out: ws_lo
+
+  extraNodes: {}
+  extraPaths: []
+
+relay:
+  enabled: true
+
+  uuid: null # Autogenerate UUID
+  logLevel: info
+  loopback: false
+
+  image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
+
+controller:
+  enabled: true
+
+  rbac:
+    enabled: true
+
+  uuid: null # Autogenerate UUID
+  logLevel: info
+  name: Kubernetes Controller
+  namespace: villas-controller
+
+  image: registry.git.rwth-aachen.de/acs/public/villas/controller:latest
+
+  extraComponents: []
+
+  extraConfig:
+    components: []
+
+database:
+  # Set to false for using an external broker
+  # If so, provide the connection details in broker.external
+  enabled: true
+
+  # external:
+  #   hostname: postgresql.postgresql
+  #   name: villas
+  #   username: villas
+  #   password: XXXX
+
+  postgresqlUsername: villas
+  postgresqlDatabase: villas
+  postgresqlPassword: XXXX
+
+broker:
+  # Set to false for using an external broker
+  # If so, provide the connection details in broker.external
+  enabled: true
+
+  # external:
+  #   hostname: broker.villas-demo
+  #   username: admin
+  #   password: XXXX
+
+  extraPlugins: rabbitmq_mqtt
+
+  service:
+    extraPorts:
+    - name: mqtt
+      port: 1883
+      targetPort: mqtt
+
+  auth:
+    username: villas
+    password: uzH48bBskn
+    erlangCookie: Uy2RmPBj66F7fTZ8Bx66eKb1xOOoZTyv

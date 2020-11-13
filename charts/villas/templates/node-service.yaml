@@ -1,0 +1,25 @@
+{{ if .Values.node.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "villas.fullname" . }}-node"
+  labels:
+    app.kubernetes.io/component: node
+    {{- include "villas.labels" . | nindent 4 }}
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+{{ $start := int .Values.node.portOffset }}
+{{ $count := int .Values.node.portCount }}
+{{ $end := int (add $start $count) }}
+{{ range untilStep $start $end 1 }}
+  - name: sim-data-{{ . }}
+    port: {{ . }}
+    protocol: UDP
+    targetPort: {{ . }}
+{{ end }}
+  selector:
+    app.kubernetes.io/component: node
+{{ end }}

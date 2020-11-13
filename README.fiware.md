@@ -1,4 +1,4 @@
-# <img src="doc/pictures/fiware.png" width=110 /> Helm Charts
+# <img src="doc/pictures/logos/fiware.png" width=110 /> Helm Charts
 
 [![build status](https://git.rwth-aachen.de/eonerc/public/fiware/charts/badges/master/pipeline.svg)](https://git.rwth-aachen.de/eonerc/public/fiware/charts/commits/master)
 
@@ -35,7 +35,7 @@ Other FIWARE components listed in the [catalogue](https://www.fiware.org/develop
 
 ## Copyright
 
-2020, Institute for Automation of Complex Power Systems, EONERC  
+2020, Institute for Automation of Complex Power Systems, EONERC
 
 ## License
 
@@ -48,5 +48,5 @@ This project is released under the terms of the [Apache License 2.0](LICENSE).
 - Steffen Vogel <stvogel@eonerc.rwth-aachen.de>
 - Stefan Dähling <sdaehling@eonerc.rwth-aachen.de>
 
-[EON Energy Research Center (EONERC)](http://www.eonerc.rwth-aachen.de)  
-[RWTH University Aachen, Germany](http://www.rwth-aachen.de)  
+[EON Energy Research Center (EONERC)](http://www.eonerc.rwth-aachen.de)
+[RWTH University Aachen, Germany](http://www.rwth-aachen.de)

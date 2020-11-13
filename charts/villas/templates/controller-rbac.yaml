@@ -1,0 +1,73 @@
+{{ if and .Values.controller.enabled .Values.controller.rbac.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: "{{ include "villas.fullname" . }}-controller"
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: "{{ include "villas.fullname" . }}-controller"
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "{{ include "villas.fullname" . }}-controller"
+  namespace:  {{ .Values.controller.namespace }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - get
+  - watch
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: "{{ include "villas.fullname" . }}-controller"
+subjects:
+- kind: ServiceAccount
+  name: "{{ include "villas.fullname" . }}-controller"
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: "{{ include "villas.fullname" . }}-controller"
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "{{ include "villas.fullname" . }}-controller"
+  namespace: {{ .Values.controller.namespace }}
+subjects:
+- kind: ServiceAccount
+  name: "{{ include "villas.fullname" . }}-controller"
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: "{{ include "villas.fullname" . }}-controller"
+  apiGroup: rbac.authorization.k8s.io
+{{ end }}

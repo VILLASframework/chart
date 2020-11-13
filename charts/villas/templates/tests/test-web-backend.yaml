@@ -1,0 +1,18 @@
+{{- if .Values.web.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-web-backend-test"
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: {{ .Release.Name }}-web-backend-test
+      image: stedolan/jq
+      command:
+        - /bin/bash
+        - -ec
+        - |
+          wget -O- http://{{ template "villas.fullname" . }}-web-backend/api/v2/healthz
+  restartPolicy: Never
+{{- end }}

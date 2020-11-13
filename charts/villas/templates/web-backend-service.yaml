@@ -1,0 +1,21 @@
+{{ if .Values.web.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "villas.fullname" . }}-web-backend"
+  labels:
+    app.kubernetes.io/component: backend
+    {{- include "villas.labels" . | nindent 4 }}
+  annotations:
+{{- if .Values.web.metrics.enabled }}
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/metrics'
+{{- end }}
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 4000
+  selector:
+    app.kubernetes.io/component: web-backend
+{{ end }}

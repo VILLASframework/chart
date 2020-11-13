@@ -1,41 +1,74 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "villas.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
 apiVersion: extensions/v1beta1
 {{- end }}
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: "{{ include "villas.fullname" . }}"
   labels:
     {{- include "villas.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{ toYaml .Values.ingress.annotations | nindent 4 }}
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
-{{- if .Values.ingress.tls }}
+{{- if .Values.ingress.tls.enabled }}
   tls:
-  {{- range .Values.ingress.tls }}
-    - hosts:
-      {{- range .hosts }}
-        - {{ . | quote }}
-      {{- end }}
-      secretName: {{ .secretName }}
-  {{- end }}
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: {{ .Values.ingress.tls.secretName }}
 {{- end }}
   rules:
-  {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
-      http:
-        paths:
-        {{- range .paths }}
-          - path: {{ . }}
-            backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
-        {{- end }}
-  {{- end }}
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+{{ if .Values.web.enabled }}
+      - path: /.*
+        pathType: ImplementationSpecific
+        backend:
+          serviceName: "{{ include "villas.fullname" . }}-web-frontend"
+          servicePort: http
+      - path: /(static/.*)
+        pathType: ImplementationSpecific
+        backend:
+          serviceName: "{{ include "villas.fullname" . }}-web-frontend"
+          servicePort: http
+      - path: /(api/.*)
+        pathType: ImplementationSpecific
+        backend:
+          serviceName: "{{ include "villas.fullname" . }}-web-backend"
+          servicePort: http
+      - path: /(swagger/.*)
+        pathType: ImplementationSpecific
+        backend:
+          serviceName: "{{ include "villas.fullname" . }}-web-backend"
+          servicePort: http
+{{ end }}
+      - path: /(rabbitmq/.*)
+        pathType: ImplementationSpecific
+        backend:
+          serviceName: "{{ include "villas.fullname" . }}-broker"
+          servicePort: http-stats
+{{ if .Values.relay.enabled }}
+      - path: /ws/relay/(.*)
+        pathType: ImplementationSpecific
+        backend:
+          serviceName: "{{ include "villas.fullname" . }}-relay"
+          servicePort: http
+{{ end }}
+{{ if .Values.node.enabled }}
+      - path: /ws/(.*)
+        pathType: ImplementationSpecific
+        backend:
+          serviceName: "{{ include "villas.fullname" . }}-node"
+          servicePort: http
+      - path: /mockup/(.*)
+        pathType: ImplementationSpecific
+        backend:
+          serviceName: "{{ include "villas.fullname" . }}-node"
+          servicePort: http
+{{ end }}
 {{- end }}

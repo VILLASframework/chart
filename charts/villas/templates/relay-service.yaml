@@ -1,0 +1,16 @@
+{{ if .Values.relay.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "villas.fullname" . }}-relay"
+  labels:
+    app.kubernetes.io/component: relay
+    {{- include "villas.labels" . | nindent 4 }}
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8088
+  selector:
+    app.kubernetes.io/component: relay
+{{ end }}

@@ -1,0 +1,16 @@
+{{ if .Values.node.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{ include "villas.fullname" . }}-node-data"
+  labels:
+    app.kubernetes.io/component: node
+    {{- include "villas.labels" . | nindent 4 }}
+spec:
+  storageClassName: "{{ .Values.storageClass }}"
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.node.persistence.size }}
+{{ end }}
