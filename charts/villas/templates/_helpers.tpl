@@ -85,9 +85,7 @@ Get the broker password secret.
 Get the database password secret.
 */}}
 {{- define "database.secretName" -}}
-{{- if .Values.database.global.postgresql.existingSecret }}
-    {{- printf "%s" (tpl .Values.database.global.postgresql.existingSecret $) -}}
-{{- else if .Values.database.existingSecret -}}
+{{- if .Values.database.existingSecret -}}
     {{- printf "%s" (tpl .Values.database.existingSecret $) -}}
 {{- else -}}
     {{- printf "%s" (include "villas.fullname" .) -}}-database
