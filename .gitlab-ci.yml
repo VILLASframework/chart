@@ -13,6 +13,8 @@ stages:
 lint:
   image: registry.git.rwth-aachen.de/acs/internal/cloud/kubernetes/deployment
   stage: test
+  before_script:
+    - helm version
   script:
     - helm lint ${CHART_DIR}/*
   tags:
