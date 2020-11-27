@@ -10,10 +10,12 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/component: relay
+      {{- include "villas.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         app.kubernetes.io/component: relay
+        {{- include "villas.selectorLabels" . | nindent 8 }}
     spec:
       containers:
       - name: relay
