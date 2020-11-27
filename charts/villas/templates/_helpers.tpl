@@ -62,35 +62,27 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
-{{- define "villas.controller.namespace" -}}
-{{- if .Values.controller.namespace -}}
-{{ .Values.controller.namespace }}
-{{- else -}}
-{{ .Release.Namespace }}-controller
-{{- end -}}
-{{- end }}
-
 {{/*
 Get the broker password secret.
 */}}
-{{- define "broker.secretName" -}}
-    {{- if .Values.broker.auth.existingPasswordSecret -}}
-        {{- printf "%s" (tpl .Values.broker.auth.existingPasswordSecret $) -}}
-    {{- else -}}
+{{- define "broker.secretName" }}
+    {{- if .Values.broker.auth.existingPasswordSecret }}
+        {{- printf "%s" (tpl .Values.broker.auth.existingPasswordSecret $) }}
+    {{- else }}
         {{- printf "%s" (include "villas.fullname" .) -}}-broker
-    {{- end -}}
-{{- end -}}
+    {{- end }}
+{{- end }}
 
 {{/*
 Get the database password secret.
 */}}
-{{- define "database.secretName" -}}
-{{- if .Values.database.existingSecret -}}
-    {{- printf "%s" (tpl .Values.database.existingSecret $) -}}
-{{- else -}}
+{{- define "database.secretName" }}
+{{- if .Values.database.existingSecret }}
+    {{- printf "%s" (tpl .Values.database.existingSecret $) }}
+{{- else }}
     {{- printf "%s" (include "villas.fullname" .) -}}-database
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}
 
 {{- define "villas.controller.component" }}
 name: {{ .name }}
@@ -98,19 +90,33 @@ uuid: {{ .uuid | default uuidv4 }}
 category: "controller"
 type: "kubernetes"
 namespace: {{ .namespace }}
-{{ end -}}
+{{ end }}
 
-{{- define "villas.uuid" -}}
-{{- $uuid := (get .global.Values .component).uuid -}}
-{{- if $uuid -}}
-    {{- $uuid -}}
-{{- else -}}
-    {{- $cmName := printf "%s-%s" (include "villas.fullname" .global) .component -}}
-    {{- $cm := lookup "v1" "ConfigMap" .global.Release.Namespace $cmName -}}
-    {{- if $cm -}}
-        {{- get $cm.data (.key | default "uuid") -}}
-    {{- else -}}
-        {{- uuidv4 -}}
-    {{- end -}}
-{{- end -}}
-{{- end -}}
+{{/*
+Get unique IDs for our components / controllers
+*/}}
+{{- define "villas.uuid" }}
+{{- $uuid := (get .global.Values .component).uuid }}
+{{- if $uuid }}
+    {{- $uuid }}
+{{- else }}
+    {{- $cmName := printf "%s-%s" (include "villas.fullname" .global) .component }}
+    {{- $cm := lookup "v1" "ConfigMap" .global.Release.Namespace $cmName }}
+    {{- if $cm }}
+        {{- get $cm.data (.key | default "uuid") }}
+    {{- else }}
+        {{- uuidv4 }}
+    {{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Get namespace for pods managed by VILLAScontroller
+*/}}
+{{- define "villas.controller.namespace" }}
+{{- if .Values.controller.namespace }}
+    {{- .Values.controller.namespace }}
+{{- else }}
+     {{- .Release.Namespace -}}-controller
+{{- end }}
+{{- end }}

@@ -109,9 +109,9 @@ controller:
     enabled: true
 
   uuid: null # Autogenerate UUID
+  namespace: null # Use "{{ .Release.Namespace }}-controller"
   logLevel: info
   name: Kubernetes Controller
-  namespace: villas-controller
 
   image: registry.git.rwth-aachen.de/acs/public/villas/controller:latest
 
