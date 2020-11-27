@@ -1,8 +1,23 @@
 # VILLASframework Helm Chart
 
+# Requirements
+
+- Kubernetes >= v1.18 (tested)
+- Helm v3
+- [Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/)
+
 ## Configuration
 
 Please have a look at the charts [default values](https://git.rwth-aachen.de/acs/public/catalogue/-/blob/master/charts/villas/values.yaml).
+
+## Admin Password
+
+Run the following kubectl commands to retrieve the initial admin credentials:
+
+```
+echo ADMIN_USER: admin
+echo ADMIN_PASS: $(kubectl get secret --namespace villas villas-web -o jsonpath="{.data.password}" | base64 --decode)
+```
 
 ## Documentation
 

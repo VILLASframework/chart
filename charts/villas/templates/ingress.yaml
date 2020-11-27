@@ -46,20 +46,20 @@ spec:
         backend:
           serviceName: "{{ include "villas.fullname" . }}-web-backend"
           servicePort: http
-{{ end }}
+{{- end }}
       - path: /(rabbitmq/.*)
         pathType: ImplementationSpecific
         backend:
           serviceName: "{{ include "villas.fullname" . }}-broker"
           servicePort: http-stats
-{{ if .Values.relay.enabled }}
+{{- if .Values.relay.enabled }}
       - path: /ws/relay/(.*)
         pathType: ImplementationSpecific
         backend:
           serviceName: "{{ include "villas.fullname" . }}-relay"
           servicePort: http
-{{ end }}
-{{ if .Values.node.enabled }}
+{{- end }}
+{{- if .Values.node.enabled }}
       - path: /ws/(.*)
         pathType: ImplementationSpecific
         backend:
@@ -70,5 +70,7 @@ spec:
         backend:
           serviceName: "{{ include "villas.fullname" . }}-node"
           servicePort: http
-{{ end }}
+{{- end }}
+{{- else }}
+{{ "The VILLASframework currently can not function without an ingress controller" | fail }}
 {{- end }}
