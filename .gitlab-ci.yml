@@ -31,7 +31,7 @@ repo:
         ${CHART_DIR}/*
     - helm repo index
         --url ${DEPLOY_URL}
-        --merge public/index.yaml .
+        --merge public/index.yaml ./public
     - mv index.yaml ./public
   artifacts:
     paths:
