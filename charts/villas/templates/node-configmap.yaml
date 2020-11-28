@@ -13,7 +13,7 @@ data:
 {{- $config := set $config "nodes" (mergeOverwrite $config.nodes .Values.node.extraNodes) -}}
 {{- $config := set $config "paths" (concat         $config.paths .Values.node.extraPaths) }}
   node.json: |
-{{ toPrettyJson $config | indent 4 }}
+{{ $config | toPrettyJson | indent 4 }}
   controller.json: |
     {
       "components": [

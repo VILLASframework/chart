@@ -84,12 +84,23 @@ Get the database password secret.
 {{- end }}
 {{- end }}
 
+{{/*
+Get the s3 credentials secret.
+*/}}
+{{- define "s3.secretName" -}}
+{{- if .Values.s3.existingSecret -}}
+{{- .Values.s3.existingSecret }}
+{{- else -}}
+{{- printf "%s" (include "villas.fullname" .) -}}-s3
+{{- end -}}
+{{- end -}}
+
 {{- define "villas.controller.component" }}
-name: {{ .name }}
-uuid: {{ .uuid | default uuidv4 }}
+name: {{ .Values.controller.name }}
+uuid: {{ .Values.controller.uuid }}
 category: "controller"
 type: "kubernetes"
-namespace: {{ .namespace }}
+namespace: {{ include "villas.controller.namespace" . }}
 {{ end }}
 
 {{/*
@@ -114,9 +125,5 @@ Get unique IDs for our components / controllers
 Get namespace for pods managed by VILLAScontroller
 */}}
 {{- define "villas.controller.namespace" }}
-{{- if .Values.controller.namespace }}
-    {{- .Values.controller.namespace }}
-{{- else }}
-     {{- .Release.Namespace -}}-controller
-{{- end }}
+{{- .Values.controller.namespace | default (printf "%s-controller" .Release.Namespace) }}
 {{- end }}

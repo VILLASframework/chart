@@ -1,4 +1,4 @@
-{{- define "villas.web.config" -}}
+{{- define "villas.web.config" }}
 mode: {{ .Values.web.mode }}
 port: 4000
 base:
@@ -24,8 +24,23 @@ db:
   host: {{ .Values.database.external.hostname }}
   user: {{ .Values.database.external.username }}
 {{- end }}
-{{- end -}}
-
+{{- if .Values.s3.enabled }}
+s3:
+{{- if .Values.s3.external.enabled }}
+  bucket: {{ .Values.s3.external.bucket }}
+  region: {{ .Values.s3.external.region }}
+  endpoint: {{ .Values.s3.external.endpoint }}
+  nossl: {{ .Values.s3.external.nossl }}
+  pathstyle: {{ .Values.s3.external.pathstyle }}
+{{- else }}
+  bucket: {{ get (.Values.s3.buckets | first) "name" }}
+  region: default
+  endpoint: {{ include "villas.fullname" . }}-s3:9000
+  nossl: true
+  pathstyle: true
+{{- end }}
+{{- end }}
+{{- end }}
 
 {{- if .Values.web.enabled }}
 apiVersion: v1

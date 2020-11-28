@@ -22,7 +22,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: "{{ include "villas.fullname" . }}-controller"
-  namespace:  {{ .Values.controller.namespace }}
+  namespace:  {{ include "villas.controller.namespace" . }}
 rules:
 - apiGroups:
   - ""
@@ -61,7 +61,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: "{{ include "villas.fullname" . }}-controller"
-  namespace: {{ .Values.controller.namespace }}
+  namespace: {{ include "villas.controller.namespace" . }}
 subjects:
 - kind: ServiceAccount
   name: "{{ include "villas.fullname" . }}-controller"

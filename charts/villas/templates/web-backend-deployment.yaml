@@ -24,6 +24,26 @@ spec:
         command: [ "villasweb-backend" ]
         args: [ "-config", "/etc/villas/config.yaml" ]
         env:
+{{- if .Values.s3.enabled }}
+        - name: AWS_ACCESS_KEY_ID
+{{- if .Values.s3.external.enabled }}
+          value: {{ .Values.s3.external.access_key }}
+{{- else }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "s3.secretName" . }}
+              key: accesskey
+{{- end }}
+        - name: AWS_SECRET_ACCESS_KEY
+{{- if .Values.s3.external.enabled }}
+          value: {{ .Values.s3.external.secret_key }}
+{{- else }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "s3.secretName" . }}
+              key: secretkey
+{{- end }}
+{{- end }}
         - name: DB_PASS
 {{- if .Values.database.enabled }}
           valueFrom:
