@@ -11,15 +11,15 @@ spec:
   - name: http
     port: 80
     targetPort: 8080
-{{ $start := int .Values.node.portOffset }}
-{{ $count := int .Values.node.portCount }}
-{{ $end := int (add $start $count) }}
-{{ range untilStep $start $end 1 }}
+{{- $start := int .Values.node.portOffset }}
+{{- $count := int .Values.node.portCount }}
+{{- $end := int (add $start $count) }}
+{{- range untilStep $start $end 1 }}
   - name: sim-data-{{ . }}
     port: {{ . }}
     protocol: UDP
     targetPort: {{ . }}
-{{ end }}
+{{- end }}
   selector:
     app.kubernetes.io/component: node
-{{ end }}
+{{- end }}

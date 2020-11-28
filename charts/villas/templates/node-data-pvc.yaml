@@ -7,7 +7,9 @@ metadata:
     app.kubernetes.io/component: node
     {{- include "villas.labels" . | nindent 4 }}
 spec:
+{{- if .Values.storageClass }}
   storageClassName: "{{ .Values.storageClass }}"
+{{- end }}
   accessModes:
   - ReadWriteOnce
   resources:

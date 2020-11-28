@@ -4,16 +4,17 @@ apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
 apiVersion: extensions/v1beta1
 {{- end }}
-apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: "{{ include "villas.fullname" . }}"
   labels:
     {{- include "villas.labels" . | nindent 4 }}
   annotations:
-    {{ toYaml .Values.ingress.annotations | nindent 4 }}
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/use-regex: "true"
+    {{- if .Values.ingress.annotations }}
+    {{- .Values.ingress.annotations | toYaml | nindent 4 }}
+    {{- end }}
 spec:
 {{- if .Values.ingress.tls.enabled }}
   tls:
