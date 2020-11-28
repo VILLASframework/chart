@@ -6,21 +6,18 @@ serviceAccount:
   create: false
   name:
 
-storageClass: rook-ceph-block
+storageClass: null
 
 ingress:
   enabled: true
 
-  host: villas.k8s.eonerc.rwth-aachen.de
+  host: localhost
 
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    eonerc.rwth-aachen.de/description: VILLASweb
-    eonerc.rwth-aachen.de/link: https://git.rwth-aachen.de/acs/public/villas/web
+  annotations: {}
 
   tls:
-    enabled: true
-    secretName: letsencrypt-prod-villas-demo
+    enabled: false
+    secretName: villas-tls
 
 web:
   enabled: true
@@ -133,7 +130,7 @@ database:
 
   postgresqlUsername: villas
   postgresqlDatabase: villas
-  postgresqlPassword: XXXX
+  postgresqlPassword: changeme
 
 broker:
   # Set to false for using an external broker
@@ -143,7 +140,7 @@ broker:
   # external:
   #   hostname: broker.villas-demo
   #   username: admin
-  #   password: XXXX
+  #   password: changeme
 
   extraPlugins: rabbitmq_mqtt
 
@@ -155,5 +152,33 @@ broker:
 
   auth:
     username: villas
-    password: uzH48bBskn
-    erlangCookie: Uy2RmPBj66F7fTZ8Bx66eKb1xOOoZTyv
+    # password: changeme
+    # erlangCookie: Uy2RmPBj66F7fTZ8Bx66eKb1xOOoZTyv
+
+s3:
+  enabled: true
+
+  external:
+    enabled: false
+
+    access_key: changeme
+    secret_key: changeme
+
+    bucket: villas-web
+    hostname: minio.minio
+
+    nossl: true
+    pathstyle: true
+
+  accessKey: changeme
+  secretKey: changeme
+
+  buckets:
+  - name: villas-web
+    policy: none
+    purge: false
+
+  resources:
+    requests:
+      # default is 4Gi which is to big for most dev machines...
+      memory: 1Gi

@@ -16,7 +16,7 @@ type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.3.4
+version: 0.4.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
@@ -39,3 +39,9 @@ dependencies:
   repository: "https://charts.bitnami.com/bitnami"
   condition: "database.enabled"
   alias: database
+
+- name: minio
+  version: 8.0.5
+  repository: https://helm.min.io/
+  condition: object_store.enable
+  alias: s3
