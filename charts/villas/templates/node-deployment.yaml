@@ -15,6 +15,8 @@ spec:
       {{- include "villas.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/node-configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: node
         {{- include "villas.selectorLabels" . | nindent 8 }}

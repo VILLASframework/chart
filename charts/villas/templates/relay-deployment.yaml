@@ -13,6 +13,8 @@ spec:
       {{- include "villas.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/relay-configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: relay
         {{- include "villas.selectorLabels" . | nindent 8 }}

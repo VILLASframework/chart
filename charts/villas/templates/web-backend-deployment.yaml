@@ -13,6 +13,8 @@ spec:
       {{- include "villas.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/web-configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: web-backend
         {{- include "villas.selectorLabels" . | nindent 8 }}
