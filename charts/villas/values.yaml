@@ -91,10 +91,17 @@ node:
         rate: 20
       lo:
         type: loopback
+
       ws_sig:
         type: websocket
+        in:
+          signals: []
       ws_lo:
         type: websocket
+        in:
+          signals:
+          - name: Loopback
+            type: float
 
     paths:
     - in: sig
