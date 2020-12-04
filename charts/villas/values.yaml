@@ -34,11 +34,11 @@ web:
     mail: admin@example.com
 
   backend:
-    # image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:33eab641
-    image: villas/web-backend-go:admin-init
+    image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:ebc1ae16
+    # image: villas/web-backend-go:admin-init
 
   frontend:
-    image: registry.git.rwth-aachen.de/acs/public/villas/web:723af74e
+    image: registry.git.rwth-aachen.de/acs/public/villas/web:3e10861c
     replicas: 2
 
 node:
