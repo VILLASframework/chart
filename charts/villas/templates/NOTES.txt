@@ -9,7 +9,7 @@ You can access the VILLASweb interface via the following URL:
 
 To login use, run the following commands to get the login credentials of the admin user:
 
-{{- if .Values.database.enabled }}
+{{- if and .Values.database.enabled .Values.web.enabled .Values.web.backend.enabled }}
 {{- if $secret }}
     User: {{ .Values.web.admin.username }}
     Password: {{ $secret.data.password | b64dec }}
