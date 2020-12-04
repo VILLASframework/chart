@@ -42,7 +42,7 @@ s3:
 {{- end }}
 {{- end }}
 
-{{- if .Values.web.enabled }}
+{{- if and .Values.web.enabled .Values.web.backend.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -50,5 +50,5 @@ metadata:
   labels: {{ include "villas.labels" . | nindent 4 }}
 data:
   config.yaml: |
-{{ toPrettyJson (mergeOverwrite (include "villas.web.config" . | fromYaml) .Values.web.extraConfig) | indent 4 }}
+{{ mergeOverwrite (include "villas.web.config" . | fromYaml) .Values.web.extraConfig | toYaml | indent 4 }}
 {{ end }}
