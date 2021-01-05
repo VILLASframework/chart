@@ -8,7 +8,7 @@ metadata:
     {{- include "villas.labels" . | nindent 4 }}
 spec:
 {{- if .Values.storageClass }}
-  storageClassName: "{{ .Values.storageClass }}"
+  storageClassName: {{ .Values.storageClass | quote }}
 {{- end }}
   accessModes:
   - ReadWriteOnce

@@ -35,7 +35,7 @@ spec:
         env:
 {{- if .Values.broker.enabled }}
         - name: AMQP_USER
-          value: "{{ .Values.broker.auth.username }}"
+          value: {{ .Values.broker.auth.username | quote }}
         - name: AMQP_HOST
           value: "{{ include "villas.fullname" . }}-broker"
         - name: AMQP_PASS
@@ -45,11 +45,11 @@ spec:
               key: rabbitmq-password
 {{- else }}
         - name: AMQP_USER
-          value: "{{ .Values.broker.external.username }}"
+          value: {{ .Values.broker.external.username | quote }}
         - name: AMQP_HOST
-          value: "{{ .Values.broker.external.hostname }}"
+          value: {{ .Values.broker.external.hostname | quote }}
         - name: AMQP_PASS
-          value: "{{ .Values.broker.external.password }}"
+          value: {{ .Values.broker.external.password | quote }}
 {{- end }}
       volumes:
       - name: config

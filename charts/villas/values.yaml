@@ -34,26 +34,17 @@ web:
     mail: admin@example.com
 
   backend:
+    enabled: true
+
     image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:ebc1ae16
 
-  # frontend:
-  #   image: registry.git.rwth-aachen.de/acs/public/villas/web:3e10861c
-  #   replicas: 2
-  #   enabled: true
-
   #   external:
-  #     enabled: false
   #     host: host.minikube.internal
   #     ip: 192.168.64.1
   #     port: 4000
 
   frontend:
     enabled: true
-
-    external:
-      enabled: false
-      host: host.minikube.internal
-      port: 4000
 
     image: registry.git.rwth-aachen.de/acs/public/villas/web:3e10861c
     replicas: 1
