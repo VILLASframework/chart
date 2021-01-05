@@ -1,4 +1,4 @@
-{{ if and .Values.web.enabled .Values.web.backend.enabled }}
+{{ if and .Values.web.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -12,10 +12,39 @@ metadata:
     prometheus.io/path: '/metrics'
 {{- end }}
 spec:
+{{- if .Values.web.backend.enabled }}
+  type: ClusterIP
   ports:
   - name: http
     port: 80
     targetPort: 4000
   selector:
     app.kubernetes.io/component: web-backend
-{{ end }}
+{{- else }}
+{{- if .Values.web.backend.external.host }}
+  type: ExternalName
+  externalName: {{ .Values.web.backend.external.host }}
+{{- else }}
+  # We rely on external backend
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: {{ .Values.web.backend.external.port }}
+---
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: "{{ include "villas.fullname" . }}-web-backend"
+  labels:
+    app.kubernetes.io/component: backend
+    {{- include "villas.labels" . | nindent 4 }}
+subsets:
+  - addresses:
+    - ip: {{ .Values.web.backend.external.ip }}
+    ports:
+    - name: http
+      port: {{ .Values.web.backend.external.port }}
+{{- end }}
+{{- end }}
+{{- end }}
