@@ -17,3 +17,14 @@ The [documentation](https://git.rwth-aachen.de/acs/public/catalogue/-/blob/doc/d
   - `Makefile` to build all images
   - `project1/`
     - `Dockerfile`
+
+
+## Helm Charts
+
+### Usage
+
+```bash
+helm repo add fein https://packages.fein-aachen.org/helm/charts/
+helm repo update
+helm install -f values.yaml villas fein/villas
+```
