@@ -38,7 +38,7 @@ web:
   backend:
     enabled: true
 
-    image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:ebc1ae16
+    image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:e3af6dc8
 
   #   external:
   #     host: host.minikube.internal
@@ -48,7 +48,7 @@ web:
   frontend:
     enabled: true
 
-    image: registry.git.rwth-aachen.de/acs/public/villas/web:3e10861c
+    image: registry.git.rwth-aachen.de/acs/public/villas/web:631bb7d5
     replicas: 1
 
 node:
