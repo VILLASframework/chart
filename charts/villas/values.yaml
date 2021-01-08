@@ -13,10 +13,8 @@ ingress:
 
   host: localhost
 
-  annotations: 
-    nginx.ingress.kubernetes.io/proxy-buffering: off
-    nginx.ingress.kubernetes.io/proxy-request-buffering: off
-
+  annotations: {}
+    
   tls:
     enabled: false
     secretName: villas-tls
