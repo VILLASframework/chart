@@ -13,7 +13,9 @@ ingress:
 
   host: localhost
 
-  annotations: {}
+  annotations: 
+    nginx.ingress.kubernetes.io/proxy-buffering: off
+    nginx.ingress.kubernetes.io/proxy-request-buffering: off
 
   tls:
     enabled: false
