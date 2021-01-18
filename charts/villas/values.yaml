@@ -199,3 +199,7 @@ s3:
     requests:
       # default is 4Gi which is to big for most dev machines...
       memory: 1Gi
+
+  environment:
+    MINIO_REGION_NAME: default
+    MINIO_BROWSER: off
