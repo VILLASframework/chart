@@ -74,6 +74,15 @@ spec:
           serviceName: "{{ include "villas.fullname" . }}-node"
           servicePort: http
 {{- end }}
+{{- if .Values.s3.enabled }}
+  - host: {{ include "villas.s3.endpoint" . }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: "{{ include "villas.fullname" . }}-s3"
+          servicePort: http
+{{- end }}
 {{- else }}
 {{ "The VILLASframework currently can not function without an ingress controller" | fail }}
 {{- end }}

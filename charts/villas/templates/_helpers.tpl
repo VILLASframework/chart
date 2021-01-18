@@ -127,3 +127,11 @@ Get namespace for pods managed by VILLAScontroller
 {{- define "villas.controller.namespace" }}
 {{- .Values.controller.namespace | default (printf "%s-controller" .Release.Namespace) }}
 {{- end }}
+
+{{/*
+Get hostname of S3 endpoint
+*/}}
+{{- define "villas.s3.endpoint" }}
+{{- printf "s3-%s" .Values.ingress.host | quote }}
+{{- end }}
+

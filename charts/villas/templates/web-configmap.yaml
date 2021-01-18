@@ -35,7 +35,7 @@ s3:
 {{- else }}
   bucket: {{ get (.Values.s3.buckets | first) "name" }}
   region: default
-  endpoint: {{ include "villas.fullname" . }}-s3:9000
+  endpoint: {{ include "villas.s3.endpoint" . }}
   nossl: true
   pathstyle: true
 {{- end }}
