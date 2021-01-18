@@ -22,6 +22,9 @@ spec:
   tls:
   - hosts:
     - {{ .Values.ingress.host | quote }}
+{{- if .Values.s3.enabled }}
+    - {{ include "villas.s3.endpoint" . }}
+{{- end }}
     secretName: {{ .Values.ingress.tls.secretName }}
 {{- end }}
   rules:
@@ -78,7 +81,7 @@ spec:
   - host: {{ include "villas.s3.endpoint" . }}
     http:
       paths:
-      - path: /
+      - path: /(.*)
         backend:
           serviceName: "{{ include "villas.fullname" . }}-s3"
           servicePort: http

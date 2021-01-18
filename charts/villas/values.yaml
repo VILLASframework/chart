@@ -14,7 +14,7 @@ ingress:
   host: localhost
 
   annotations: {}
-    
+
   tls:
     enabled: false
     secretName: villas-tls
@@ -173,14 +173,16 @@ broker:
 s3:
   enabled: true
 
+  bucket: villas-web
+  region: default
+
   external:
     enabled: false
 
     access_key: changeme
     secret_key: changeme
 
-    bucket: villas-web
-    hostname: minio.minio
+    endpoint: minio.minio
 
     nossl: true
     pathstyle: true

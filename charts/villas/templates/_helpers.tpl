@@ -132,6 +132,6 @@ Get namespace for pods managed by VILLAScontroller
 Get hostname of S3 endpoint
 */}}
 {{- define "villas.s3.endpoint" }}
-{{- printf "s3-%s" .Values.ingress.host | quote }}
+{{- printf "s3.%s" .Values.ingress.host | quote }}
 {{- end }}
 

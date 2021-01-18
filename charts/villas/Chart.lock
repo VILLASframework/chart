@@ -7,6 +7,6 @@ dependencies:
   version: 9.8.11
 - name: minio
   repository: https://helm.min.io/
-  version: 8.0.5
-digest: sha256:507641bc2856132f269c0a8e3f2bc919c2638cf7e56bb038c8a5419c506a0aac
-generated: "2020-11-27T19:52:17.623572+01:00"
+  version: 8.0.9
+digest: sha256:435dcc8bac688546af6796ae28b05518d2ca065452a145924b00a18dc2362295
+generated: "2021-01-18T20:19:43.321526+01:00"
