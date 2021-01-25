@@ -45,8 +45,12 @@ spec:
       - path: /(api/.*)
         pathType: ImplementationSpecific
         backend:
-          serviceName: "{{ include "villas.fullname" . }}-web-backend"
           servicePort: http
+{{- if .Values.web.auth.external.enabled }}
+          serviceName: "{{ include "villas.fullname" . }}-proxy"
+{{- else }}
+          serviceName: "{{ include "villas.fullname" . }}-web-backend"
+{{- endif }}
       - path: /(swagger/.*)
         pathType: ImplementationSpecific
         backend:

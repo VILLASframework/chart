@@ -1,0 +1,16 @@
+{{ if .Values.proxy.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "villas.fullname" . }}-proxy"
+  labels:
+    app.kubernetes.io/component: proxy
+    {{- include "villas.labels" . | nindent 4 }}
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 4180
+  selector:
+    app.kubernetes.io/component: proxy
+{{ end }}

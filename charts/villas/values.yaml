@@ -35,6 +35,21 @@ web:
       mail: admin@example.com
       # password: changeme
 
+    external:
+      enabled: false
+
+      client_id: villas
+      client_secret: "Ho0Zeilahxoh3Cae0ao9rieHooL1oonah0nash6aiNae7phaiceeCoo9Eesh6tei"
+
+      cookie_secret: "ohth8iin6QuiequeGu5tiengizip4eid"
+
+      email_domains: "*"
+
+      login_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/authorize
+      redeem_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/token
+      validate_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/validate
+
+
   backend:
     enabled: true
 
@@ -50,6 +65,13 @@ web:
 
     image: registry.git.rwth-aachen.de/acs/public/villas/web:master
     replicas: 1
+
+proxy:
+  image: quay.io/oauth2-proxy/oauth2-proxy
+
+  extraEnv:
+    OAUTH2_PROXY_JUPYTERHUB_URL: https://jupyter.k8s.eonerc.rwth-aachen.de
+    OAUTH2_PROXY_PROVIDER_DISPLAY_NAME: JupyterHub
 
 node:
   enabled: true
@@ -205,3 +227,4 @@ s3:
   environment:
     MINIO_REGION_NAME: default
     MINIO_BROWSER: off
+

@@ -1,0 +1,67 @@
+{{ if .Values.web.auth.external.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "villas.fullname" . }}-proxy"
+  labels:
+    app.kubernetes.io/component: proxy
+    {{- include "villas.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: proxy
+      {{- include "villas.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: proxy
+        {{- include "villas.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: proxy
+        args: [
+          "proxy", "-u", "$(UUID)", "-d", {{ .Values.proxy.logLevel | quote }}
+        ]
+        image: {{ .Values.proxy.image }}
+        imagePullPolicy: Always
+        securityContext:
+          privileged: true
+        ports:
+        - name: http
+          containerPort: 4180
+        env:
+        - name: OAUTH2_PROXY_HTTP_ADDRESS
+          value: ":8080"
+        - name: OAUTH2_PROXY_UPSTREAMS
+          value: "http://{{ include "villas.fullname" . }}-web-backend"
+        - name: OAUTH2_PROXY_CLIENT_ID
+          value: {{ .Values.web.auth.external.client_id | quote }}
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          value: {{ .Values.web.auth.external.client_secret | quote }}
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          value: {{ .Values.web.auth.external.cookie_secret }}
+        - name: OAUTH2_PROXY_EMAIL_DOMAINS
+          value: {{ .Values.web.auth.external.email_domains | quote}}
+        - name: OAUTH2_PROXY_LOGIN_URL
+          value: {{ .Values.web.auth.external.login_url | quote }}
+        - name: OAUTH2_PROXY_REDEEM_URL
+          value: {{ .Values.web.auth.external.redeem_url | quote }}
+        - name: OAUTH2_PROXY_VALIDATE_URL
+          value: {{ .Values.web.auth.external.validate_url | quote }}
+        - name: OAUTH2_PROXY_REVERSE_PROXY
+          value: "true"
+        - name: OAUTH2_PROXY_SET_XAUTHREQUEST
+          value: "true"
+        - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
+          value: "true"
+{%- for key, value in .Values.proxy.extraEnv %}
+        - name: {{ key | quote }
+          value: {{ value | quote }
+{%- endfor %}
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 4180
+          initialDelaySeconds: 3
+          periodSeconds: 3
+{{ end }}
