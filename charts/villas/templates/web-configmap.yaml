@@ -4,8 +4,8 @@ port: 4000
 base:
   host: {{ .Values.ingress.host }}
 admin:
-  user: {{ .Values.web.admin.username }}
-  mail: {{ .Values.web.admin.mail }}
+  user: {{ .Values.web.auth.admin.username }}
+  mail: {{ .Values.web.auth.admin.mail }}
 amqp:
 {{- if .Values.broker.enabled }}
   host: {{ include "villas.fullname" . }}-broker/%2F

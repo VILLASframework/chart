@@ -29,9 +29,11 @@ web:
 
   extraConfig: {}
 
-  admin:
-    username: admin
-    mail: admin@example.com
+  auth:
+    admin:
+      username: admin
+      mail: admin@example.com
+      # password: changeme
 
   backend:
     enabled: true

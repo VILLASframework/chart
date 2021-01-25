@@ -11,10 +11,10 @@ To login use, run the following commands to get the login credentials of the adm
 
 {{- if and .Values.database.enabled .Values.web.enabled .Values.web.backend.enabled }}
 {{- if $secret }}
-    User: {{ .Values.web.admin.username }}
+    User: {{ .Values.web.auth.admin.username }}
     Password: {{ $secret.data.password | b64dec }}
 {{- else }}
-    export ADMIN_USER={{ .Values.web.admin.username }}
+    export ADMIN_USER={{ .Values.web.auth.admin.username }}
     export ADMIN_PASS=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ $webSecretName }} -o jsonpath="{.data.password}" | base64 --decode)
 {{- end }}
 {{- end }}
