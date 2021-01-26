@@ -21,7 +21,7 @@ echo ADMIN_PASS: $(kubectl get secret --namespace villas villas-web -o jsonpath=
 
 ## Documentation
 
-User documentation is available here: <https://villas.fein-aachen.org/doc/node.html>
+User documentation is available here: <https://villas.fein-aachen.org/doc/installation.html>
 
 ## Copyright
 
