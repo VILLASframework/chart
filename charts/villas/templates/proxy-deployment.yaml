@@ -40,8 +40,6 @@ spec:
           value: {{ .Values.web.auth.external.client_secret | quote }}
         - name: OAUTH2_PROXY_COOKIE_SECRET
           value: {{ .Values.web.auth.external.cookie_secret }}
-        - name: OAUTH2_PROXY_EMAIL_DOMAINS
-          value: {{ .Values.web.auth.external.email_domains | quote}}
         - name: OAUTH2_PROXY_LOGIN_URL
           value: {{ .Values.web.auth.external.login_url | quote }}
         - name: OAUTH2_PROXY_REDEEM_URL
@@ -54,6 +52,17 @@ spec:
           value: "true"
         - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
           value: "true"
+{%- if .Values.web.auth.external.email_domains %}
+        - name: OAUTH2_PROXY_EMAIL_DOMAINS
+          value: {{ .Values.web.auth.external.email_domains | join "," | quote}}
+{%- else }
+        - name: OAUTH2_PROXY_EMAIL_DOMAINS
+          value: "*"
+{% endif }
+{%- if .Values.web.auth.external.allowed_groups %}
+        - name: OAUTH2_PROXY_ALLOWED_GROUPS
+          value: {{ .Values.web.auth.external.allowed_groups | join "," | quote}}
+{% endif }
 {%- for key, value in .Values.proxy.extraEnv %}
         - name: {{ key | quote }
           value: {{ value | quote }

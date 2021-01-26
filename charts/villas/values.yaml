@@ -43,7 +43,10 @@ web:
 
       cookie_secret: "ohth8iin6QuiequeGu5tiengizip4eid"
 
-      email_domains: "*"
+      # email_domains:
+      # - "*"
+      # allowed_groups:
+      # - student
 
       login_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/authorize
       redeem_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/token
