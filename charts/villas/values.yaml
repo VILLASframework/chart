@@ -30,6 +30,10 @@ web:
   extraConfig: {}
 
   auth:
+    # login_url:
+    # logout_url:
+    # logout_url: /oauth2/sign_out?rd=https%3A%2F%2Fjupyter.k8s.eonerc.rwth-aachen.de%2Fhub%2Flogout
+
     admin:
       username: admin
       mail: admin@example.com
@@ -48,10 +52,11 @@ web:
       # allowed_groups:
       # - student
 
+      provider: jupyterhub
+
       login_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/authorize
       redeem_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/token
       validate_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/validate
-
 
   backend:
     enabled: true
@@ -74,7 +79,6 @@ proxy:
 
   extraEnv:
     OAUTH2_PROXY_JUPYTERHUB_URL: https://jupyter.k8s.eonerc.rwth-aachen.de
-    OAUTH2_PROXY_PROVIDER_DISPLAY_NAME: JupyterHub
 
 node:
   enabled: true

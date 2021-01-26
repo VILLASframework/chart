@@ -50,6 +50,10 @@ spec:
           value: "true"
         - name: OAUTH2_PROXY_SET_XAUTHREQUEST
           value: "true"
+        - name: OAUTH2_PASS_ACCESS_TOKEN
+          value: "true"
+        - name: OAUTH2_PROXY_PROVIDER
+          value: {{ .Values.web.auth.external.provider | quote }}
         - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
           value: "true"
 {%- if .Values.web.auth.external.email_domains %}
@@ -58,15 +62,15 @@ spec:
 {%- else }
         - name: OAUTH2_PROXY_EMAIL_DOMAINS
           value: "*"
-{% endif }
+{% end }
 {%- if .Values.web.auth.external.allowed_groups %}
         - name: OAUTH2_PROXY_ALLOWED_GROUPS
           value: {{ .Values.web.auth.external.allowed_groups | join "," | quote}}
-{% endif }
-{%- for key, value in .Values.proxy.extraEnv %}
-        - name: {{ key | quote }
-          value: {{ value | quote }
-{%- endfor %}
+{% end }
+{{- range $key, $value := .Values.proxy.extraEnv }}
+        - name: {{ $key | quote }}
+          value: {{ $value | quote }}
+{{- end }}
         livenessProbe:
           httpGet:
             path: /ping

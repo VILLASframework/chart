@@ -38,6 +38,12 @@ s3:
   pathstyle: true
 {{- end }}
 {{- end }}
+{{- if .Values.web.auth.external.enabled }}
+auth:
+  external: true
+  login_url: {{ .Values.web.auth.login_url | default "/oauth2/sign_in" | quote }}
+  login_logout: {{ .Values.web.auth.logout_url | default "/oauth2/sign_out" | quote }}
+{{- end }}
 {{- end }}
 
 {{- if .Values.web.enabled }}
