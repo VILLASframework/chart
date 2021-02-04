@@ -32,7 +32,7 @@ spec:
     http:
       paths:
 {{- if .Values.web.enabled }}
-      - path: /(.*)
+      - path: /.*
         pathType: ImplementationSpecific
         backend:
           serviceName: "{{ include "villas.fullname" . }}-web-frontend"
@@ -53,6 +53,7 @@ spec:
         backend:
           servicePort: http
           serviceName: "{{ include "villas.fullname" . }}-proxy"
+      - path: /(api/v[0-9]+/authenticate/external)
         pathType: ImplementationSpecific
         backend:
           servicePort: http
