@@ -22,17 +22,20 @@ ingress:
 web:
   enabled: true
 
+  mode: release
+  title: VILLASweb
+  sub_title: ""
+  contact:
+    name: Steffen Vogel
+    mail: svogel2@eonerc.rwth-aachen.de
+
   metrics:
     enabled: true
-
-  mode: release
 
   extraConfig: {}
 
   auth:
-    # login_url:
-    # logout_url:
-    # logout_url: /oauth2/sign_out?rd=https%3A%2F%2Fjupyter.k8s.eonerc.rwth-aachen.de%2Fhub%2Flogout
+    logout_url: /oauth2/sign_out?rd=https%3A%2F%2Fjupyter.k8s.eonerc.rwth-aachen.de%2Fhub%2Flogout
 
     admin:
       username: admin
@@ -53,6 +56,7 @@ web:
       # - student
 
       provider: jupyterhub
+      provider_name: JupyterHub
 
       login_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/authorize
       redeem_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/token

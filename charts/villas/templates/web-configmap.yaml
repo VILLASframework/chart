@@ -1,5 +1,10 @@
 {{- define "villas.web.config" }}
-mode: {{ .Values.web.mode }}
+mode: {{ .Values.web.mode | quote }}
+title: {{ .Values.web.title | quote }}
+sub_title: {{ .Values.web.sub_title | quote }}
+contact:
+  name: {{ .Values.web.contact.name | quote }}
+  mail: {{ .Values.web.contact.mail | quote }}
 port: 4000
 base:
   host: {{ .Values.ingress.host }}
@@ -41,8 +46,8 @@ s3:
 {{- if .Values.web.auth.external.enabled }}
 auth:
   external: true
-  login_url: {{ .Values.web.auth.login_url | default "/oauth2/sign_in" | quote }}
-  login_logout: {{ .Values.web.auth.logout_url | default "/oauth2/sign_out" | quote }}
+  provider_name: {{ .Values.web.auth.provider_name | quote }}
+  logout_url: {{ .Values.web.auth.logout_url | quote }}
 {{- end }}
 {{- end }}
 
