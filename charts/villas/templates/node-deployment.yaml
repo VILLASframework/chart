@@ -64,6 +64,10 @@ spec:
         volumeMounts:
         - mountPath: /etc/villas/
           name: config
+{{- if .Values.node.persistence.enabled }}
+        - mountPath: /data
+          name: data
+{{- end }}
         env:
 {{- if .Values.broker.enabled }}
         - name: AMQP_USER
@@ -87,7 +91,9 @@ spec:
       - name: config
         configMap:
           name: "{{ include "villas.fullname" . }}-node"
+{{- if .Values.node.persistence.enabled }}
       - name: data
         persistentVolumeClaim:
           claimName: "{{ include "villas.fullname" . }}-node-data"
-{{ end }}
+{{- end }}
+{{- end }}
