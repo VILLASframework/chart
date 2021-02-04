@@ -48,7 +48,11 @@ spec:
           servicePort: http
           serviceName: "{{ include "villas.fullname" . }}-web-backend"
 {{- if .Values.web.auth.external.enabled }}
-      - path: /(api/v\d+/authenticate)
+      - path: /(oauth2/.*)
+        pathType: ImplementationSpecific
+        backend:
+          servicePort: http
+          serviceName: "{{ include "villas.fullname" . }}-proxy"
         pathType: ImplementationSpecific
         backend:
           servicePort: http
