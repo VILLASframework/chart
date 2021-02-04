@@ -19,9 +19,6 @@ spec:
     spec:
       containers:
       - name: proxy
-        args: [
-          "proxy", "-u", "$(UUID)", "-d", {{ .Values.proxy.logLevel | quote }}
-        ]
         image: {{ .Values.proxy.image }}
         imagePullPolicy: Always
         securityContext:
@@ -31,7 +28,7 @@ spec:
           containerPort: 4180
         env:
         - name: OAUTH2_PROXY_HTTP_ADDRESS
-          value: ":8080"
+          value: ":4180"
         - name: OAUTH2_PROXY_UPSTREAMS
           value: "http://{{ include "villas.fullname" . }}-web-backend"
         - name: OAUTH2_PROXY_CLIENT_ID
@@ -56,17 +53,17 @@ spec:
           value: {{ .Values.web.auth.external.provider | quote }}
         - name: OAUTH2_PROXY_SKIP_PROVIDER_BUTTON
           value: "true"
-{%- if .Values.web.auth.external.email_domains %}
+{{- if .Values.web.auth.external.email_domains }}
         - name: OAUTH2_PROXY_EMAIL_DOMAINS
-          value: {{ .Values.web.auth.external.email_domains | join "," | quote}}
-{%- else }
+          value: {{ .Values.web.auth.external.email_domains | join "," | quote }}
+{{- else }}
         - name: OAUTH2_PROXY_EMAIL_DOMAINS
           value: "*"
-{% end }
-{%- if .Values.web.auth.external.allowed_groups %}
+{{- end }}
+{{- if .Values.web.auth.external.allowed_groups }}
         - name: OAUTH2_PROXY_ALLOWED_GROUPS
-          value: {{ .Values.web.auth.external.allowed_groups | join "," | quote}}
-{% end }
+          value: {{ .Values.web.auth.external.allowed_groups | join "," | quote }}
+{{- end }}
 {{- range $key, $value := .Values.proxy.extraEnv }}
         - name: {{ $key | quote }}
           value: {{ $value | quote }}
@@ -77,4 +74,4 @@ spec:
             port: 4180
           initialDelaySeconds: 3
           periodSeconds: 3
-{{ end }}
+{{- end }}
