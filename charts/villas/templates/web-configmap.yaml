@@ -1,7 +1,7 @@
 {{- define "villas.web.config" }}
 mode: {{ .Values.web.mode | quote }}
 title: {{ .Values.web.title | quote }}
-sub_title: {{ .Values.web.sub_title | quote }}
+sub-title: {{ .Values.web.sub_title | quote }}
 contact:
   name: {{ .Values.web.contact.name | quote }}
   mail: {{ .Values.web.contact.mail | quote }}
@@ -45,9 +45,11 @@ s3:
 {{- end }}
 {{- if .Values.web.auth.external.enabled }}
 auth:
-  external: true
-  provider_name: {{ .Values.web.auth.provider_name | quote }}
-  logout_url: {{ .Values.web.auth.logout_url | quote }}
+  external:
+    enabled: true
+    provider-name: {{ .Values.web.auth.external.provider_name | quote }}
+    authorize-url: {{ .Values.web.auth.external.login_url | quote }}
+  logout-url: {{ .Values.web.auth.logout_url | quote }}
 {{- end }}
 {{- end }}
 
