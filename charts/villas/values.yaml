@@ -123,7 +123,7 @@ node:
         type: websocket
         in:
           signals: []
-          hooks: 
+          hooks:
           - type: stats
             buckets: 25
             warmup: 100
@@ -135,7 +135,8 @@ node:
           signals:
           - name: Loopback
             type: float
-	  hooks: 
+
+          hooks:
           - type: stats
             buckets: 25
             warmup: 100
