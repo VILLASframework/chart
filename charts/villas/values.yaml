@@ -88,7 +88,7 @@ proxy:
 node:
   enabled: true
 
-  image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
+  image: registry.git.rwth-aachen.de/acs/public/villas/node:master
 
   uuid: null # Autogenerate UUID
   logLevel: info
@@ -123,13 +123,24 @@ node:
         type: websocket
         in:
           signals: []
+          hooks: 
+          - type: stats
+            buckets: 25
+            warmup: 100
+            verbose: true
+            format: json
       ws_lo:
         type: websocket
         in:
           signals:
           - name: Loopback
             type: float
-
+	  hooks: 
+          - type: stats
+            buckets: 25
+            warmup: 100
+            verbose: true
+            format: json
     paths:
     - in: sig
       out: ws_sig
@@ -148,7 +159,7 @@ relay:
   logLevel: info
   loopback: false
 
-  image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
+  image: registry.git.rwth-aachen.de/acs/public/villas/node:master
 
 controller:
   enabled: true
