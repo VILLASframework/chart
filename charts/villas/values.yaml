@@ -34,6 +34,11 @@ web:
 
   extraConfig: {}
 
+  # Mapping of external groups to list of scenario IDs
+  groups:
+    moodle-l2pmanager@20:
+    - 1
+
   auth:
     logout_url: /oauth2/sign_out?rd=https%3A%2F%2Fjupyter.k8s.eonerc.rwth-aachen.de%2Fhub%2Flogout
 

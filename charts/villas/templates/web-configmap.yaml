@@ -48,8 +48,9 @@ auth:
   external:
     enabled: true
     provider-name: {{ .Values.web.auth.external.provider_name | quote }}
-    authorize-url: {{ .Values.web.auth.external.login_url | quote }}
   logout-url: {{ .Values.web.auth.logout_url | quote }}
+groups:
+  path: /etc/villas/groups.yaml
 {{- end }}
 {{- end }}
 
@@ -60,6 +61,10 @@ metadata:
   name: "{{ include "villas.fullname" . }}-web"
   labels: {{ include "villas.labels" . | nindent 4 }}
 data:
+{{- if .Values.web.auth.external.enabled }}
+  groups.yaml: |
+{{ .Values.web.groups | toYaml | indent 4 }}
+{{- end }}
   config.yaml: |
 {{ mergeOverwrite (include "villas.web.config" . | fromYaml) .Values.web.extraConfig | toYaml | indent 4 }}
 {{ end }}
