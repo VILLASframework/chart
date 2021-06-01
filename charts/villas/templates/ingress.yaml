@@ -14,6 +14,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 1024m
     {{- if .Values.ingress.annotations }}
     {{- .Values.ingress.annotations | toYaml | nindent 4 }}
     {{- end }}
