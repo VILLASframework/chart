@@ -32,6 +32,9 @@ web:
   metrics:
     enabled: true
 
+  rancherURL: rancher.k8s.eonerc.rwth-aachen.de	
+  k8sCluster: local
+
   extraConfig: {}
 
   # Mapping of external groups to list of scenario IDs
