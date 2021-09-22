@@ -98,7 +98,7 @@ Get the s3 credentials secret.
 {{- define "villas.controller.component" }}
 name: {{ .Values.controller.name }}
 uuid: {{ .Values.controller.uuid }}
-category: "controller"
+category: "manager"
 type: "kubernetes"
 namespace: {{ include "villas.controller.namespace" . }}
 {{ end }}
