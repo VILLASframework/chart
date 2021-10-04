@@ -5,7 +5,7 @@ Congratulations! You deployed VILLASframework in your Kubernetes cluster.
 {{- if .Values.ingress.enabled }}
 You can access the VILLASweb interface via the following URL:
 
-    http{{ if .Values.ingress.tls.enabled }}s{{ end }}://{{ .Values.ingress.host }}/
+    {{ include "villas.baseurl" . }}
 
 To login use, run the following commands to get the login credentials of the admin user:
 

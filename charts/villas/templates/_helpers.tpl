@@ -135,3 +135,9 @@ Get hostname of S3 endpoint
 {{- printf "s3.%s" .Values.ingress.host | quote }}
 {{- end }}
 
+{{/*
+Get public URL of VILLAS setup
+*/}}
+{{- define "villas.baseurl" -}}
+http{{ if .Values.ingress.tls.enabled }}s{{ end }}://{{ .Values.ingress.host }}
+{{- end }}
