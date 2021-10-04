@@ -59,7 +59,7 @@ spec:
         imagePullPolicy: Always
         args: [
           "-b", "amqp://$(AMQP_USER):$(AMQP_PASS)@$(AMQP_HOST)/%2F",
-          "-c", "/etc/villas/controller.json", "daemon"
+          "-c", "/etc/villas/controller.yaml", "daemon"
         ]
         volumeMounts:
         - mountPath: /etc/villas/

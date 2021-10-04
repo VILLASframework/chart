@@ -1,3 +1,11 @@
+{{- define "villas.node.config.controller" }}
+components:
+- name: VILLASnode
+  category: manager
+  type: villas-node
+  api_url: http://localhost:8080
+{{- end }}
+
 {{ if .Values.node.enabled }}
 {{- $uuid := include "villas.uuid" (dict "global" . "component" "node") -}}
 apiVersion: v1
@@ -14,15 +22,6 @@ data:
 {{- $config := set $config "paths" (concat         $config.paths .Values.node.extraPaths) }}
   node.json: |
 {{ $config | toPrettyJson | indent 4 }}
-  controller.json: |
-    {
-      "components": [
-        {
-          "name": "VILLASnode",
-          "category": "controller",
-          "type": "villas-node",
-          "api_url": "http://localhost:8080"
-        }
-      ]
-    }
+  controller.yaml: |
+{{ include "villas.node.config.controller" . | indent 4 }}
 {{ end }}

@@ -15,6 +15,6 @@ metadata:
 {{- $config := set $config "components" $comps }}
 data:
   uuid: {{ .Values.controller.uuid }}
-  controller.json: |
-{{ $config | toPrettyJson | indent 4 }}
+  controller.yaml: |
+{{ $config | toYaml | indent 4 }}
 {{ end }}
