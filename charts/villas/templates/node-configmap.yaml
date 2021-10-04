@@ -4,6 +4,9 @@ components:
   category: manager
   type: villas-node
   api_url: http://localhost:8080
+{{- if .Values.ingress.enabled }}
+  api_url_external: {{include "villas.baseurl" . }}/ws
+{{- end }}
 {{- end }}
 
 {{ if .Values.node.enabled }}

@@ -4,6 +4,9 @@ components:
   category: manager
   type: villas-relay
   api_url: http://localhost:8088
+{{- if .Values.ingress.enabled }}
+  api_url_external: {{include "villas.baseurl" . }}/ws/relay
+{{- end }}
 {{- end }}
 
 {{ if .Values.relay.enabled }}
