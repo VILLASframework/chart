@@ -26,8 +26,6 @@ spec:
         ]
         image: {{ .Values.relay.image }}
         imagePullPolicy: Always
-        securityContext:
-          privileged: true
         ports:
         - name: http
           containerPort: 8088

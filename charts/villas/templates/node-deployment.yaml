@@ -41,8 +41,6 @@ spec:
             configMapKeyRef:
               name: "{{ include "villas.fullname" . }}-node"
               key: uuid
-        securityContext:
-          privileged: true
         volumeMounts:
         - mountPath: /etc/villas/
           name: config
