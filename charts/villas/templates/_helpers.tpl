@@ -143,3 +143,18 @@ Get public URL of VILLAS setup
 {{- define "villas.baseurl" -}}
 http{{ if .Values.ingress.tls.enabled }}s{{ end }}://{{ .Values.ingress.host }}
 {{- end }}
+
+{{/*
+Ingress backend specifications
+*/}}
+{{- define "ingress.backend" -}}
+{{- if semverCompare ">=1.21" .root.Capabilities.KubeVersion.GitVersion }}
+service:
+  name: "{{ include "villas.fullname" .root }}-{{ .name }}"
+  port:
+    name: "{{ .port }}"
+{{- else }}
+serviceName: "{{ include "villas.fullname" .root }}-{{ .name }}"
+servicePort: "{{ .port }}"
+{{- end }}
+{{- end }}
