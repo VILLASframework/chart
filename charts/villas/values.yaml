@@ -76,17 +76,12 @@ web:
   backend:
     enabled: true
 
-    image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:master
-
-  #   external:
-  #     host: host.minikube.internal
-  #     ip: 192.168.64.1
-  #     port: 4000
+    image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:latest
 
   frontend:
     enabled: true
 
-    image: registry.git.rwth-aachen.de/acs/public/villas/web:master
+    image: registry.git.rwth-aachen.de/acs/public/villas/web:latest
     replicas: 1
 
 proxy:
@@ -99,7 +94,7 @@ proxy:
 node:
   enabled: true
 
-  image: registry.git.rwth-aachen.de/acs/public/villas/node:master
+  image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
 
   uuid: null # Autogenerate UUID
   logLevel: info
@@ -171,7 +166,7 @@ relay:
   logLevel: info
   loopback: false
 
-  image: registry.git.rwth-aachen.de/acs/public/villas/node:master
+  image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
 
 controller:
   enabled: true
@@ -267,4 +262,3 @@ s3:
   environment:
     MINIO_REGION_NAME: default
     MINIO_BROWSER: off
-
