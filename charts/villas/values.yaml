@@ -183,6 +183,8 @@ controller:
   namespace: null # Use "{{ .Release.Namespace }}-controller"
   logLevel: info
   name: Kubernetes Controller
+  rancherURL: https://rancher.k8s.eonerc.rwth-aachen.de
+  clusterName: local
 
   image: registry.git.rwth-aachen.de/acs/public/villas/controller:latest
 

@@ -101,6 +101,8 @@ uuid: {{ .Values.controller.uuid }}
 category: "manager"
 type: "kubernetes"
 namespace: {{ include "villas.controller.namespace" . }}
+rancher-url: {{ .Values.controller.rancherURL }}
+cluster-name: {{ .Values.controller.clusterName }}
 {{ end }}
 
 {{/*
