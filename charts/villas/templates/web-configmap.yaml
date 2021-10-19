@@ -35,10 +35,12 @@ s3:
   region: {{ .Values.s3.region }}
 {{- if .Values.s3.external.enabled }}
   endpoint: {{ .Values.s3.external.endpoint }}
+  endpoint-public: {{ include "villas.s3.endpoint" . }}
   nossl: {{ .Values.s3.external.nossl }}
   pathstyle: {{ .Values.s3.external.pathstyle }}
 {{- else }}
-  endpoint: {{ include "villas.s3.endpoint" . }}
+  endpoint: {{ include "villas.fullname" . }}-s3:9000
+  endpoint-public: {{ include "villas.s3.endpoint" . }}
   nossl: {{ not .Values.ingress.tls.enabled }}
   pathstyle: true
 {{- end }}
