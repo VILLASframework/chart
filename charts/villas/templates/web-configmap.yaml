@@ -49,11 +49,9 @@ auth:
     enabled: true
     provider-name: {{ .Values.web.auth.external.provider_name | quote }}
   logout-url: {{ .Values.web.auth.logout_url | quote }}
-{{- end }}
-# TODO: the groups.path setting only makes sense if .Values.web.auth.external.enabled is true
-#       move the following two lines into the if clause above as soon as VILLASweb-backend is fixed
 groups:
   path: /etc/villas/groups.yaml
+{{- end }}
 {{- end }}
 
 {{- if .Values.web.enabled }}
@@ -63,12 +61,10 @@ metadata:
   name: "{{ include "villas.fullname" . }}-web"
   labels: {{ include "villas.labels" . | nindent 4 }}
 data:
-# {{- if .Values.web.auth.external.enabled }}
-# TODO: the groups.path setting only makes sense if .Values.web.auth.external.enabled is true
-#       uncomment the if statement as soon as VILLASweb-backend is fixed
+{{- if or true .Values.web.auth.external.enabled }}
   groups.yaml: |
-{{ .Values.web.groups | toYaml | indent 4 }}
-# {{- end }}
+{{ .Values.web.groups | default list | toYaml | indent 4 }}
+{{- end }}
   config.yaml: |
 {{ mergeOverwrite (include "villas.web.config" . | fromYaml) .Values.web.extraConfig | toYaml | indent 4 }}
 {{ end }}
