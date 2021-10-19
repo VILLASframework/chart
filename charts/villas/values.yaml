@@ -32,7 +32,7 @@ web:
   metrics:
     enabled: true
 
-  rancherURL: rancher.k8s.eonerc.rwth-aachen.de	
+  rancherURL: rancher.k8s.eonerc.rwth-aachen.de
   k8sCluster: local
 
   extraConfig: {}
