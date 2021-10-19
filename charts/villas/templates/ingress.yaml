@@ -60,13 +60,8 @@ spec:
           servicePort: http
           serviceName: "{{ include "villas.fullname" . }}-proxy"
 {{- end }}
-      - path: /(swagger/.*)
-        pathType: ImplementationSpecific
-        backend:
-          serviceName: "{{ include "villas.fullname" . }}-web-backend"
-          servicePort: http
 {{- end }}
-      - path: /(rabbitmq/.*)
+      - path: /(broker/.*)
         pathType: ImplementationSpecific
         backend:
           serviceName: "{{ include "villas.fullname" . }}-broker"

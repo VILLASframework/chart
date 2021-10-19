@@ -218,6 +218,9 @@ broker:
 
   extraPlugins: rabbitmq_mqtt
 
+  extraConfiguration: |
+    management.path_prefix = /broker
+
   service:
     extraPorts:
     - name: mqtt
