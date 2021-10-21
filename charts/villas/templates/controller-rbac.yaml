@@ -28,6 +28,7 @@ rules:
   - ""
   resources:
   - events
+  - pods
   verbs:
   - get
   - watch
@@ -35,7 +36,31 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - pods
+  - pods/log
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - batch
+  resources:
+  - jobs
   verbs:
   - get
   - list
@@ -65,7 +90,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: "{{ include "villas.fullname" . }}-controller"
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ include "villas.controller.namespace" . }}
 roleRef:
   kind: Role
   name: "{{ include "villas.fullname" . }}-controller"
