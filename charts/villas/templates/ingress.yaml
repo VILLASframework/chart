@@ -61,6 +61,11 @@ spec:
         pathType: ImplementationSpecific
         backend: {{ include "ingress.backend" (dict "root" . "name" "relay" "port" "http") | indent 10 }}
 {{- end }}
+{{- if .Values.controller.enabled }}
+      - path: /controller/(.*)
+        pathType: ImplementationSpecific
+        backend: {{ include "ingress.backend" (dict "root" . "name" "controller" "port" "http") | indent 10 }
+{{- end }}
 {{- if .Values.node.enabled }}
       - path: /ws/(.*)
         pathType: ImplementationSpecific

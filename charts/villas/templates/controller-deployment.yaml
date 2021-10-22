@@ -24,11 +24,13 @@ spec:
       - name: controller
         image: {{ .Values.controller.image }}
         imagePullPolicy: Always
-        # command: [ ]
         args: [
           "-b", "amqp://$(AMQP_USER):$(AMQP_PASS)@$(AMQP_HOST)/%2F",
           "-c", "/etc/villas/controller.yaml", "daemon"
         ]
+        ports:
+        - name: http
+          containerPort: 8088
         volumeMounts:
         - mountPath: /etc/villas/
           name: config

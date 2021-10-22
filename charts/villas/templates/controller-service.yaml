@@ -1,0 +1,16 @@
+{{ if .Values.controller.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ include "villas.fullname" . }}-controller"
+  labels:
+    app.kubernetes.io/component: controller
+    {{- include "villas.labels" . | nindent 4 }}
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8089
+  selector:
+    app.kubernetes.io/component: controller
+{{ end }}
