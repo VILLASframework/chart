@@ -19,10 +19,9 @@ rules:
   - list
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
   name: "{{ include "villas.fullname" . }}-controller"
-  namespace:  {{ include "villas.controller.namespace" . }}
 rules:
 - apiGroups:
   - ""
@@ -37,6 +36,7 @@ rules:
   - ""
   resources:
   - pods/log
+  - namespaces
   verbs:
   - get
   - list
@@ -57,6 +57,7 @@ rules:
   - update
   - patch
   - delete
+  - create
 - apiGroups:
   - batch
   resources:
@@ -68,6 +69,7 @@ rules:
   - update
   - patch
   - delete
+  - create
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
