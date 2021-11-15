@@ -138,7 +138,7 @@ Get hostname of S3 endpoint
 {{- if .Values.ingress.tls.enabled -}}
 {{- $scheme := "https" -}}
 {{- end -}}
-scheme: {{ $scheme }}://s3.{{ .Values.ingress.host }}
+{{ $scheme }}://s3.{{ .Values.ingress.host }}
 {{- end }}
 
 {{/*
@@ -149,7 +149,7 @@ Get public URL of VILLAS setup
 {{- if .Values.ingress.tls.enabled -}}
 {{- $scheme := "https" -}}
 {{- end -}}
-scheme: {{ $scheme }}://{{ .Values.ingress.host }}
+{{ $scheme }}://{{ .Values.ingress.host }}
 {{- end }}
 
 {{/*
