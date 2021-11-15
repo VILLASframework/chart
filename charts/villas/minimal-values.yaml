@@ -1,0 +1,18 @@
+web:
+  auth:
+    admin:
+      mail: admin@example.com
+      username: villas
+      password: test4villas
+
+ingress:
+  host: "localhost"
+
+s3:
+  enabled: false
+
+broker:
+  auth:
+    username: villas
+    password: test4villas
+    erlangCookie: iKpbgHPsHAj8x58kzFWVT23xahSQ03Vw
