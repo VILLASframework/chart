@@ -134,22 +134,20 @@ Get namespace for pods managed by VILLAScontroller
 Get hostname of S3 endpoint
 */}}
 {{- define "villas.s3.endpoint" }}
+{{- $scheme := "http" -}}
 {{- if .Values.ingress.tls.enabled -}}
 {{- $scheme := "https" -}}
-{{- else -}}
-{{- $scheme := "http" -}}
 {{- end -}}
-{{- $scheme }}://s3.{{ .Values.ingress.host }}
+{{ $scheme }}://s3.{{ .Values.ingress.host }}
 {{- end }}
 
 {{/*
 Get public URL of VILLAS setup
 */}}
 {{- define "villas.baseurl" -}}
+{{- $scheme := "http" -}}
 {{- if .Values.ingress.tls.enabled -}}
 {{- $scheme := "https" -}}
-{{- else -}}
-{{- $scheme := "http" -}}
 {{- end -}}
 {{ $scheme }}://{{ .Values.ingress.host }}
 {{- end }}
