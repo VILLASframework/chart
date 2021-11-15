@@ -139,7 +139,7 @@ Get hostname of S3 endpoint
 {{- else -}}
 {{- $scheme := "http" -}}
 {{- end -}}
-{{ $scheme }}://s3.{{ .Values.ingress.host }}
+{{- $scheme }}://s3.{{ .Values.ingress.host }}
 {{- end }}
 
 {{/*
