@@ -33,7 +33,7 @@ data:
       type: villas-relay
       api_url: http://{{ include "villas.fullname" . }}-relay
       {{- if .Values.ingress.enabled }}
-      api_url_external: {{include "villas.baseurl" . }}/ws/relay
+      api_url_external: "{{include "villas.baseurl" . }}/ws/relay"
       {{- end }}
 {{- end }}
 
@@ -43,7 +43,7 @@ data:
       type: villas-node
       api_url: http://{{ include "villas.fullname" . }}-node
       {{- if .Values.ingress.enabled }}
-      api_url_external: {{include "villas.baseurl" . }}/ws
+      api_url_external: "{{include "villas.baseurl" . }}/ws"
       {{- end }}
 {{- end }}
 
