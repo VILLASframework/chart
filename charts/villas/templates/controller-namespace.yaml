@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ include "villas.controller.namespace" . }}
+  name: {{ include "villas.controller.kubernetes.namespace" . }}
   labels:
     app.kubernetes.io/component: controller
     {{- include "villas.labels" . | nindent 4 }}

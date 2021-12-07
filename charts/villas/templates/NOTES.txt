@@ -1,22 +1,49 @@
 {{- $webSecretName := include "villas.fullname" . | printf "%s-web" -}}
-{{- $secret := lookup "v1" "Secret" .Release.Namespace $webSecretName -}}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace $webSecretName }}
+
 Congratulations! You deployed VILLASframework in your Kubernetes cluster.
 
-{{- if .Values.ingress.enabled }}
+{{ if .Values.ingress.enabled -}}
 You can access the VILLASweb interface via the following URL:
 
     {{ include "villas.baseurl" . }}
 
-To login use, run the following commands to get the login credentials of the admin user:
+{{- if and .Values.web.enabled .Values.web.backend.enabled }}
 
-{{- if and .Values.database.enabled .Values.web.enabled .Values.web.backend.enabled }}
-{{- if $secret }}
+To login use, following credentials:
+{{ if $secret }}
     User: {{ .Values.web.auth.admin.username }}
     Password: {{ $secret.data.password | b64dec }}
 {{- else }}
     User: {{ .Values.web.auth.admin.username }}
-    Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ $webSecretName }} -o jsonpath="{.data.password}" | base64 --decode)
+    To get the password run: kubectl get secret --namespace {{ .Release.Namespace }} {{ $webSecretName }} -o jsonpath="{.data.password}" | base64 --decode
 {{- end }}
+{{- end }}
+
+The following REST APIs are available:
+{{- if and .Values.web.enabled .Values.web.backend.enabled }}
+
+    VILLASweb:
+       Endpoint: {{ include "villas.baseurl" . }}/api/v2
+       Documentation: https://villas.fein-aachen.org/api/web
+{{- end }}
+{{- if .Values.controller.enabled }}
+
+    VILLAScontroller:
+       Endpoint: {{ include "villas.baseurl" . }}/controller/api/v1
+       Documentation: https://villas.fein-aachen.org/api/controller
+{{- end }}
+{{- if .Values.node.enabled }}
+
+    VILLASnode:
+       Endpoint: {{ include "villas.baseurl" . }}/node/api/v2
+       Documentation: https://villas.fein-aachen.org/api/node
+{{- end }}
+{{- if .Values.relay.enabled }}
+
+    VILLASnode Relay:
+       Endpoint: {{ include "villas.baseurl" . }}/relay/api/v1
+       Documentation: https://villas.fein-aachen.org/api/relay
 {{- end }}
 
 Have fun!

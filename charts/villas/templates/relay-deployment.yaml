@@ -41,36 +41,6 @@ spec:
             port: 8088
           initialDelaySeconds: 3
           periodSeconds: 3
-      - name: controller
-        image: {{ .Values.controller.image }}
-        imagePullPolicy: Always
-        command: [ "villas-controller" ]
-        args: [
-          "-b", "amqp://$(AMQP_USER):$(AMQP_PASS)@$(AMQP_HOST)/%2F",
-          "-c", "/etc/villas/controller.yaml", "daemon"
-        ]
-        volumeMounts:
-        - mountPath: /etc/villas/
-          name: config
-        env:
-{{- if .Values.broker.enabled }}
-        - name: AMQP_USER
-          value: {{ .Values.broker.auth.username | quote }}
-        - name: AMQP_HOST
-          value: "{{ include "villas.fullname" . }}-broker"
-        - name: AMQP_PASS
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "broker.secretName" . }}
-              key: rabbitmq-password
-{{- else }}
-        - name: AMQP_USER
-          value: {{ .Values.broker.external.username | quote }}
-        - name: AMQP_HOST
-          value: {{ .Values.broker.external.hostname | quote }}
-        - name: AMQP_PASS
-          value: {{ .Values.broker.external.password | quote }}
-{{- end }}
       volumes:
       - name: config
         configMap:

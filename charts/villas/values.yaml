@@ -15,6 +15,9 @@ ingress:
 
   annotations: {}
 
+  # Overwrite the ingress port if not 80 / 443
+  port: null
+
   tls:
     enabled: false
     secretName: villas-tls
@@ -82,7 +85,7 @@ web:
     enabled: true
 
     image: registry.git.rwth-aachen.de/acs/public/villas/web:latest
-    replicas: 1
+    replicas: 2
 
 proxy:
 #  image: quay.io/oauth2-proxy/oauth2-proxy
@@ -97,6 +100,8 @@ node:
   image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
 
   uuid: null # Autogenerate UUID
+
+  # One of: trace, debug, info, warning, error, critical, off
   logLevel: info
 
   portOffset: 12000
@@ -163,7 +168,10 @@ relay:
   enabled: true
 
   uuid: null # Autogenerate UUID
+
+  # One of: trace, debug, info, warning, error, critical, off
   logLevel: info
+
   loopback: false
 
   image: registry.git.rwth-aachen.de/acs/public/villas/node:latest
@@ -171,22 +179,27 @@ relay:
 controller:
   enabled: true
 
-  rbac:
-    enabled: true
-
   uuid: null # Autogenerate UUID
-  namespace: null # Use "{{ .Release.Namespace }}-controller"
+
+  # One of critical, error, warning, info, debug
   logLevel: info
-  name: Kubernetes Controller
-  rancherURL: https://rancher.k8s.eonerc.rwth-aachen.de
-  clusterName: local
 
   image: registry.git.rwth-aachen.de/acs/public/villas/controller:latest
 
-  extraComponents: []
+  kubernetes:
+    enabled: true
 
-  extraConfig:
-    components: []
+    rbac:
+      enabled: true
+
+    namespace: null # Default to "{{ .Release.Namespace }}-controller"
+
+    uuid: null # Autogenerate UUID
+    rancherURL: https://rancher.k8s.eonerc.rwth-aachen.de
+    clusterName: local
+
+  extraComponents: []
+  extraConfig: {}
 
 database:
   # Set to false for using an external broker

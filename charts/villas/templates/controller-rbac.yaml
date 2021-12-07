@@ -1,4 +1,4 @@
-{{ if and .Values.controller.enabled .Values.controller.rbac.enabled }}
+{{ if and .Values.controller.enabled .Values.controller.kubernetes.enabled .Values.controller.kubernetes.rbac.enabled }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -22,7 +22,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: "{{ include "villas.fullname" . }}-controller"
-  namespace: "{{ include "villas.controller.namespace" . }}"
+  namespace: {{ include "villas.controller.kubernetes.namespace" . }}
 rules:
 - apiGroups:
   - ""
@@ -82,7 +82,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: "{{ include "villas.fullname" . }}-controller"
-  namespace: "{{ include "villas.controller.namespace" . }}"
+  namespace: "{{ include "villas.controller.kubernetes.namespace" . }}"
 subjects:
 - kind: ServiceAccount
   name: "{{ include "villas.fullname" . }}-controller"

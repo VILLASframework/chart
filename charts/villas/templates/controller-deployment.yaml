@@ -25,8 +25,10 @@ spec:
         image: {{ .Values.controller.image }}
         imagePullPolicy: Always
         args: [
+          "-d", "{{ .Values.controller.logLevel | upper }}",
           "-b", "amqp://$(AMQP_USER):$(AMQP_PASS)@$(AMQP_HOST)/%2F",
-          "-c", "/etc/villas/controller.yaml", "daemon"
+          "-c", "/etc/villas/controller.yaml",
+          "daemon"
         ]
         ports:
         - name: http

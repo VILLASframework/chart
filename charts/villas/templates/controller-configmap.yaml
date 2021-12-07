@@ -1,6 +1,6 @@
-{{ if .Values.controller.enabled }}
-{{- $uuid := (include "villas.uuid" (dict "global" . "component" "controller")) -}}
-{{- $_ := set .Values.controller "uuid" $uuid -}}
+{{- if .Values.controller.enabled }}
+{{- $uuid     := include "villas.uuid" (list . "controller") }}
+{{- $uuid_k8s := include "villas.uuid.kubernetes" . }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,13 +8,50 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     {{- include "villas.labels" . | nindent 4 }}
-{{- $comps := list (include "villas.controller.component" . | fromYaml) -}}
-{{- $comps := concat $comps .Values.controller.extraConfig.components -}}
-{{- $comps := concat $comps .Values.controller.extraComponents -}}
-{{- $config := .Values.controller.extraConfig -}}
-{{- $config := set $config "components" $comps }}
+
 data:
-  uuid: {{ .Values.controller.uuid }}
+  uuid: {{ $uuid }}
+{{- if .Values.controller.kubernetes.enabled }}
+  uuid-kubernetes: {{ $uuid_k8s }}
+{{- end }}
   controller.yaml: |
-{{ $config | toYaml | indent 4 }}
-{{ end }}
+    uuid: {{ $uuid }}
+    components:
+{{- if .Values.controller.kubernetes.enabled }}
+    - name: Kubernetes
+      uuid: {{ $uuid_k8s }}
+      category: "manager"
+      type: "kubernetes"
+      namespace: {{ include "villas.controller.kubernetes.namespace" . }}
+      rancher_url: {{ .Values.controller.kubernetes.rancherURL }}
+      cluster_name: {{ .Values.controller.kubernetes.clusterName }}
+{{- end }}
+
+{{- if .Values.relay.enabled  }}
+    - name: VILLASrelay
+      category: manager
+      type: villas-relay
+      api_url: http://{{ include "villas.fullname" . }}-relay
+      {{- if .Values.ingress.enabled }}
+      api_url_external: {{include "villas.baseurl" . }}/ws/relay
+      {{- end }}
+{{- end }}
+
+{{- if .Values.node.enabled }}
+    - name: VILLASnode
+      category: manager
+      type: villas-node
+      api_url: http://{{ include "villas.fullname" . }}-node
+      {{- if .Values.ingress.enabled }}
+      api_url_external: {{include "villas.baseurl" . }}/ws
+      {{- end }}
+{{- end }}
+
+{{- if not (empty .Values.controller.extraComponents) }}
+{{ .Values.controller.extraComponents | toYaml | indent 4 }}
+{{- end }}
+
+{{- if not (empty .Values.controller.extraConfig) }}
+{{ .Values.controller.extraConfig | toYaml | indent 4 }}
+{{- end }}
+{{- end }}

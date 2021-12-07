@@ -1,16 +1,5 @@
-{{- define "villas.node.config.controller" }}
-components:
-- name: VILLASnode
-  category: manager
-  type: villas-node
-  api_url: http://localhost:8080
-{{- if .Values.ingress.enabled }}
-  api_url_external: {{include "villas.baseurl" . }}/ws
-{{- end }}
-{{- end }}
-
 {{ if .Values.node.enabled }}
-{{- $uuid := include "villas.uuid" (dict "global" . "component" "node") -}}
+{{- $uuid := include "villas.uuid" (list . "node") -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -20,11 +9,9 @@ metadata:
 data:
   uuid: {{ $uuid }}
 {{- $config := .Values.node.extraConfig -}}
-{{- $config := set $config "uuid" $uuid -}}
-{{- $config := set $config "nodes" (mergeOverwrite $config.nodes .Values.node.extraNodes) -}}
-{{- $config := set $config "paths" (concat         $config.paths .Values.node.extraPaths) }}
+{{- $_ := set $config "uuid" $uuid -}}
+{{- $_ := set $config "nodes" (mergeOverwrite $config.nodes .Values.node.extraNodes) -}}
+{{- $_ := set $config "paths" (concat         $config.paths .Values.node.extraPaths) }}
   node.json: |
 {{ $config | toPrettyJson | indent 4 }}
-  controller.yaml: |
-{{ include "villas.node.config.controller" . | indent 4 }}
 {{ end }}

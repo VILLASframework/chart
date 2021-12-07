@@ -95,28 +95,35 @@ Get the s3 credentials secret.
 {{- end -}}
 {{- end -}}
 
-{{- define "villas.controller.component" }}
-name: {{ .Values.controller.name }}
-uuid: {{ .Values.controller.uuid }}
-category: "manager"
-type: "kubernetes"
-namespace: {{ include "villas.controller.namespace" . }}
-rancher_url: {{ .Values.controller.rancherURL }}
-cluster_name: {{ .Values.controller.clusterName }}
-{{ end }}
-
 {{/*
 Get unique IDs for our components / controllers
 */}}
 {{- define "villas.uuid" }}
-{{- $uuid := (get .global.Values .component).uuid }}
+{{- $top := index . 0 -}}
+{{- $context := index . 1 -}}
+{{- $uuid := (get $top.Values $context).uuid }}
 {{- if $uuid }}
     {{- $uuid }}
 {{- else }}
-    {{- $cmName := printf "%s-%s" (include "villas.fullname" .global) .component }}
-    {{- $cm := lookup "v1" "ConfigMap" .global.Release.Namespace $cmName }}
+    {{- $cmName := printf "%s-%s" (include "villas.fullname" $top) $context }}
+    {{- $cm := lookup "v1" "ConfigMap" $top.Release.Namespace $cmName }}
     {{- if $cm }}
-        {{- get $cm.data (.key | default "uuid") }}
+        {{- get $cm.data "uuid" }}
+    {{- else }}
+        {{- uuidv4 }}
+    {{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "villas.uuid.kubernetes" }}
+{{- $uuid := .Values.controller.kubernetes.uuid }}
+{{- if $uuid }}
+    {{- $uuid }}
+{{- else }}
+    {{- $cmName := printf "%s-controller" (include "villas.fullname" .) }}
+    {{- $cm := lookup "v1" "ConfigMap" .Release.Namespace $cmName }}
+    {{- if $cm }}
+        {{- get $cm.data "uuid-kubernetes" }}
     {{- else }}
         {{- uuidv4 }}
     {{- end }}
@@ -126,8 +133,8 @@ Get unique IDs for our components / controllers
 {{/*
 Get namespace for pods managed by VILLAScontroller
 */}}
-{{- define "villas.controller.namespace" }}
-{{- .Values.controller.namespace | default (printf "%s-controller" .Release.Namespace) }}
+{{- define "villas.controller.kubernetes.namespace" }}
+{{- .Values.controller.kubernetes.namespace | default (printf "%s-controller" .Release.Namespace) }}
 {{- end }}
 
 {{/*
@@ -138,7 +145,11 @@ Get hostname of S3 endpoint
 {{- if .Values.ingress.tls.enabled -}}
 {{- $scheme := "https" -}}
 {{- end -}}
-{{ $scheme }}://s3.{{ .Values.ingress.host }}
+{{- $port := "" -}}
+{{- if .Values.ingress.port -}}
+{{- $port := printf ":%d" .Values.ingress.port -}}
+{{- end -}}
+{{ $scheme }}://s3.{{ .Values.ingress.host }}{{ $port }}
 {{- end }}
 
 {{/*
@@ -149,20 +160,24 @@ Get public URL of VILLAS setup
 {{- if .Values.ingress.tls.enabled -}}
 {{- $scheme := "https" -}}
 {{- end -}}
-{{ $scheme }}://{{ .Values.ingress.host }}
+{{- $port := "" -}}
+{{- if .Values.ingress.port -}}
+{{- $port := printf ":%d" .Values.ingress.port -}}
+{{- end -}}
+{{ $scheme }}://{{ .Values.ingress.host }}{{ $port }}
 {{- end }}
 
 {{/*
 Ingress backend specifications
 */}}
 {{- define "ingress.backend" -}}
-{{- if semverCompare ">=1.21" .root.Capabilities.KubeVersion.GitVersion }}
+{{- if semverCompare ">=1.21" .top.Capabilities.KubeVersion.GitVersion }}
 service:
-  name: "{{ include "villas.fullname" .root }}-{{ .name }}"
+  name: "{{ include "villas.fullname" .top }}-{{ .name }}"
   port:
     name: "{{ .port }}"
 {{- else }}
-serviceName: "{{ include "villas.fullname" .root }}-{{ .name }}"
+serviceName: "{{ include "villas.fullname" .top }}-{{ .name }}"
 servicePort: "{{ .port }}"
 {{- end }}
 {{- end }}

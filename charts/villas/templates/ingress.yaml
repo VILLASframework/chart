@@ -24,7 +24,7 @@ spec:
 {{- if .Values.ingress.tls.enabled }}
   tls:
   - hosts:
-    - {{ .Values.ingress.host | quote }}
+    - "{{ .Values.ingress.host }}"
 {{- if .Values.s3.enabled }}
     - "s3.{{ .Values.ingress.host }}"
 {{- end }}
@@ -37,42 +37,47 @@ spec:
 {{- if .Values.web.enabled }}
       - path: /.*
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "web-frontend" "port" "http") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "web-frontend" "port" "http") | indent 10 }}
       - path: /(static/.*)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "web-frontend" "port" "http") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "web-frontend" "port" "http") | indent 10 }}
       - path: /(api/.*)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "web-backend" "port" "http") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "web-backend" "port" "http") | indent 10 }}
 {{- if .Values.web.auth.external.enabled }}
       - path: /(oauth2/.*)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "proxy" "port" "http") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "proxy" "port" "http") | indent 10 }}
       - path: /(api/v[0-9]+/authenticate/external)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "proxy" "port" "http") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "proxy" "port" "http") | indent 10 }}
 {{- end }}
 {{- end }}
+{{- if .Values.broker.enabled }}
       - path: /(broker/.*)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "broker" "port" "http-stats") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "broker" "port" "http-stats") | indent 10 }}
+{{- end }}
 {{- if .Values.relay.enabled }}
       - path: /ws/relay/(.*)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "relay" "port" "http") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "relay" "port" "http") | indent 10 }}
+      - path: /relay/(.*)
+        pathType: ImplementationSpecific
+        backend: {{ include "ingress.backend" (dict "top" . "name" "relay" "port" "http") | indent 10 }}
 {{- end }}
 {{- if .Values.controller.enabled }}
       - path: /controller/(.*)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "controller" "port" "http") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "controller" "port" "http") | indent 10 }}
 {{- end }}
 {{- if .Values.node.enabled }}
       - path: /ws/(.*)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "node" "port" "http") | indent 10 }}
-      - path: /mockup/(.*)
+        backend: {{ include "ingress.backend" (dict "top" . "name" "node" "port" "http") | indent 10 }}
+      - path: /node/(.*)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "node" "port" "http") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "node" "port" "http") | indent 10 }}
 {{- end }}
 {{- if .Values.s3.enabled }}
   - host: "s3.{{ .Values.ingress.host }}"
@@ -80,7 +85,7 @@ spec:
       paths:
       - path: /(.*)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "root" . "name" "s3" "port" "http") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "s3" "port" "http") | indent 10 }}
 {{- end }}
 {{- else }}
 {{ "The VILLASframework currently can not function without an ingress controller" | fail }}
