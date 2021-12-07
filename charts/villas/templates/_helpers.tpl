@@ -142,7 +142,7 @@ Get hostname of S3 endpoint
 */}}
 {{- define "villas.s3.endpoint" }}
 {{- $scheme := ternary "https" "http" .Values.ingress.tls.enabled }}
-{{- $port := ternary "" (printf ":%d" .Values.ingress.port) (empty .Values.ingress.port) -}}
+{{- $port := ternary "" (printf ":%d" (int .Values.ingress.port)) (empty .Values.ingress.port) -}}
 {{ $scheme }}://s3.{{ .Values.ingress.host }}{{ $port }}
 {{- end }}
 
@@ -151,7 +151,7 @@ Get public URL of VILLAS setup
 */}}
 {{- define "villas.baseurl" -}}
 {{- $scheme := ternary "https" "http" .Values.ingress.tls.enabled }}
-{{- $port := ternary "" (printf ":%d" .Values.ingress.port) (empty .Values.ingress.port) -}}
+{{- $port := ternary "" (printf ":%d" (int .Values.ingress.port)) (empty .Values.ingress.port) -}}
 {{ $scheme }}://{{ .Values.ingress.host }}{{ $port }}
 {{- end }}
 
