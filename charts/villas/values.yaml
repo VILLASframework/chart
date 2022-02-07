@@ -274,3 +274,11 @@ s3:
   environment:
     MINIO_REGION_NAME: default
     MINIO_BROWSER: off
+
+
+pintura:
+  enabled: true
+
+  replicas: 1
+
+  image: sogno/pintura:latest
