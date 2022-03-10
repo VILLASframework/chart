@@ -215,6 +215,13 @@ database:
   postgresqlDatabase: villas
   postgresqlPassword: changeme
 
+  # Improve compatability with older systems
+  shmVolume:
+    enabled: false
+
+  postgresqlExtendedConf:
+    hugePages: "off"
+
 broker:
   # Set to false for using an external broker
   # If so, provide the connection details in broker.external
