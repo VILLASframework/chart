@@ -1,0 +1,38 @@
+{{ if .Values.signaling.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: "{{ include "villas.fullname" . }}-signaling"
+    app.kubernetes.io/component: signaling
+    {{- include "villas.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: signaling
+      {{- include "villas.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: signaling
+        {{- include "villas.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - image: {{ .Values.signaling.image }}
+        imagePullPolicy: Always
+        name: signaling
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+{{- end }}

@@ -1,17 +1,17 @@
-{{ if .Values.web.auth.external.enabled }}
+{{ if .Values.signaling.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: "{{ include "villas.fullname" . }}-proxy"
+  name: "{{ include "villas.fullname" . }}-signaling"
   labels:
-    app.kubernetes.io/component: proxy
+    app.kubernetes.io/component: signaling
     {{- include "villas.labels" . | nindent 4 }}
 spec:
   ports:
   - name: http
     port: 80
-    targetPort: 4180
+    targetPort: 8080
   selector:
-    app.kubernetes.io/component: proxy
+    app.kubernetes.io/component: signaling
     {{- include "villas.selectorLabels" . | nindent 4 }}
-{{- end }}
+{{ end }}

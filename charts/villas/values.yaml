@@ -163,6 +163,12 @@ node:
   extraNodes: {}
   extraPaths: []
 
+
+signaling:
+  enabled: true
+
+  image: registry.git.rwth-aachen.de/acs/public/villas/signaling
+
 relay:
   enabled: true
 

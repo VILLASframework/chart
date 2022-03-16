@@ -13,4 +13,5 @@ spec:
     targetPort: 8088
   selector:
     app.kubernetes.io/component: relay
+    {{- include "villas.selectorLabels" . | nindent 4 }}
 {{ end }}

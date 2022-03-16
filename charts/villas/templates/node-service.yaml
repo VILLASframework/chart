@@ -22,4 +22,5 @@ spec:
 {{- end }}
   selector:
     app.kubernetes.io/component: node
+    {{- include "villas.selectorLabels" . | nindent 4 }}
 {{- end }}
