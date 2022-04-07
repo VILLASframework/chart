@@ -126,6 +126,7 @@ node:
         signal: mixed
         values: 5
         rate: 20
+
       lo:
         type: loopback
 
@@ -139,6 +140,14 @@ node:
             warmup: 100
             verbose: true
             format: json
+
+      webrtc_sig:
+        type: webrtc
+
+        server: wss://villas.k8s.eonerc.rwth-aachen.de/ws/signaling
+        session: signal-demo
+        wait: false
+
       ws_lo:
         type: websocket
         in:
@@ -152,11 +161,16 @@ node:
             warmup: 100
             verbose: true
             format: json
+
     paths:
     - in: sig
-      out: ws_sig
+      out:
+      - ws_sig
+      - webrtc_sig
+
     - in: ws_lo
       out: lo
+
     - in: lo
       out: ws_lo
 

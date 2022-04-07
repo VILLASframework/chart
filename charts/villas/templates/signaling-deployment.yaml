@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   annotations:
   name: "{{ include "villas.fullname" . }}-signaling"
+  labels:
     app.kubernetes.io/component: signaling
     {{- include "villas.labels" . | nindent 4 }}
 spec:
