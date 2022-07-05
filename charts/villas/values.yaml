@@ -88,8 +88,7 @@ web:
     replicas: 2
 
 proxy:
-#  image: quay.io/oauth2-proxy/oauth2-proxy
-  image: stv0g/oauth2-proxy
+  image: quay.io/oauth2-proxy/oauth2-proxy
 
   extraEnv:
     OAUTH2_PROXY_JUPYTERHUB_URL: https://jupyter.k8s.eonerc.rwth-aachen.de
@@ -181,7 +180,7 @@ node:
 signaling:
   enabled: true
 
-  image: registry.git.rwth-aachen.de/acs/public/villas/signaling
+  image: registry.git.rwth-aachen.de/acs/public/villas/signaling:latest
 
 relay:
   enabled: true
