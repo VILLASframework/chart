@@ -2,7 +2,7 @@
 
 ## Documentation
 
-User documentation is available here: <https://villas.fein-aachen.org/doc/installation.html>
+User documentation is available here: <https://villas.fein-aachen.org/docs/installation>
 
 ## Copyright
 
