@@ -6,7 +6,7 @@ User documentation is available here: <https://villas.fein-aachen.org/docs/insta
 
 ## Copyright
 
-2014-2021, Institute for Automation of Complex Power Systems, EONERC
+2014-2022, Institute for Automation of Complex Power Systems, EONERC
 
 ## License
 
