@@ -16,19 +16,19 @@ maintainers:
 
 dependencies:
 - name: rabbitmq
-  version: "7.8.0"
+  version: 10.3.6
   repository: "https://charts.bitnami.com/bitnami"
   condition: "broker.enabled"
   alias: broker
 
 - name: postgresql
-  version: "9.8.11"
+  version: 11.9.1
   repository: "https://charts.bitnami.com/bitnami"
   condition: "database.enabled"
   alias: database
 
 - name: minio
-  version: 8.0.9
-  repository: https://helm.min.io/
+  version: 11.10.3
+  repository: https://charts.bitnami.com/bitnami
   condition: "s3.enabled"
   alias: s3

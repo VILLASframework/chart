@@ -28,6 +28,7 @@ spec:
     - {{ .Values.ingress.host | quote }}
 {{- if .Values.s3.enabled }}
     - "s3.{{ .Values.ingress.host }}"
+    - "console.s3.{{ .Values.ingress.host }}"
 {{- end }}
 {{- end }}
   rules:
@@ -95,7 +96,13 @@ spec:
       paths:
       - path: /(.*)
         pathType: ImplementationSpecific
-        backend: {{ include "ingress.backend" (dict "top" . "name" "s3" "port" "http") | indent 10 }}
+        backend: {{ include "ingress.backend" (dict "top" . "name" "s3" "port" "minio-api") | indent 10 }}
+  - host: "console.s3.{{ .Values.ingress.host }}"
+    http:
+      paths:
+      - path: /(.*)
+        pathType: ImplementationSpecific
+        backend: {{ include "ingress.backend" (dict "top" . "name" "s3" "port" "minio-console") | indent 10 }}
 {{- end }}
 {{- else }}
 {{ "The VILLASframework currently can not function without an ingress controller" | fail }}

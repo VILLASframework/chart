@@ -32,7 +32,7 @@ db:
 {{- if .Values.s3.enabled }}
 s3:
   bucket: {{ .Values.s3.bucket }}
-  region: {{ .Values.s3.region }}
+  region: us-east-1
 {{- if .Values.s3.external.enabled }}
   endpoint: {{ .Values.s3.external.endpoint }}
   endpoint-public: "{{ include "villas.s3.endpoint" . }}"
@@ -41,7 +41,7 @@ s3:
 {{- else }}
   endpoint: {{ include "villas.fullname" . }}-s3:9000
   endpoint-public: "{{ include "villas.s3.endpoint" . }}"
-  nossl: {{ not .Values.ingress.tls.enabled }}
+  nossl: true
   pathstyle: true
 {{- end }}
 {{- end }}

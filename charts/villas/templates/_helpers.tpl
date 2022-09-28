@@ -89,7 +89,7 @@ Get the s3 credentials secret.
 */}}
 {{- define "s3.secretName" -}}
 {{- if .Values.s3.existingSecret -}}
-{{- .Values.s3.existingSecret }}
+{{- .Values.s3.auth.existingSecret }}
 {{- else -}}
 {{- printf "%s" (include "villas.fullname" .) -}}-s3
 {{- end -}}
