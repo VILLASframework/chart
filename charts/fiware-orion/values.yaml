@@ -11,10 +11,9 @@ broker:
   # version: ngsi-ld
 
   image:
-
     repository: fiware/orion
-    tag: 2.3.0
-    
+    tag: 3.7.0
+
     # repository: fiware/orion-ld
     # tag: 0.1.1
 
@@ -48,11 +47,11 @@ broker:
     hosts:
       - host: ocb.fiware.k8s.eonerc.rwth-aachen.de
         paths:
-          - /
+        - /
     tls:
-      - secretName: letsencrypt-prod-orion
-        hosts:
-          - ocb.fiware.k8s.eonerc.rwth-aachen.de
+    - secretName: letsencrypt-prod-orion
+      hosts:
+        - ocb.fiware.k8s.eonerc.rwth-aachen.de
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
@@ -83,7 +82,7 @@ mongodb:
   existingSecret: fiware-orion-mongodb
 
   persistence:
-    storageClass: managed-nfs-storage
+    storageClass: rook-ceph-block
 
   # Put here more Chart settings as described here:
   # https://hub.helm.sh/charts/bitnami/mongodb
@@ -93,7 +92,7 @@ mongoexpress:
 
   usePassword: true
   password: admin
-  existingSecret: fiware-orion-mongoexpress
+  # existingSecret: fiware-orion-mongoexpress
 
   replicaCount: 1
 
@@ -128,13 +127,13 @@ mongoexpress:
       eonerc.rwth-aachen.de/description: FIWARE Mongo Express
       eonerc.rwth-aachen.de/link: https://git.rwth-aachen.de/acs/public/deployment/fiware-stack
     hosts:
-      - host: mongo.fiware.k8s.eonerc.rwth-aachen.de
-        paths:
-          - /
+    - host: mongo.fiware.k8s.eonerc.rwth-aachen.de
+      paths:
+        - /
     tls:
-      - secretName: letsencrypt-prod-mogno-express
-        hosts:
-          - mongo.fiware.k8s.eonerc.rwth-aachen.de
+    - secretName: letsencrypt-prod-mogno-express
+      hosts:
+        - mongo.fiware.k8s.eonerc.rwth-aachen.de
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
