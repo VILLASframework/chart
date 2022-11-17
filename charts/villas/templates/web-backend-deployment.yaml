@@ -51,7 +51,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ include "database.secretName" . }}
-              key: postgresql-password
+              key: password
 {{- else }}
           value: {{ .Values.database.external.password | quote }}
 {{- end }}

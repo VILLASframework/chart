@@ -230,16 +230,10 @@ database:
   #   username: villas
   #   password: XXXX
 
-  postgresqlUsername: villas
-  postgresqlDatabase: villas
-  postgresqlPassword: changeme
-
-  # Improve compatability with older systems
-  shmVolume:
-    enabled: false
-
-  postgresqlExtendedConf:
-    hugePages: "off"
+  auth:
+    username: villas
+    database: villas
+    password: changeme
 
 broker:
   # Set to false for using an external broker
