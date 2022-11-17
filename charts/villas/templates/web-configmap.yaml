@@ -21,9 +21,9 @@ amqp:
 {{- end }}
 db:
 {{- if .Values.database.enabled }}
-  name: {{ .Values.database.postgresqlDatabase }}
+  name: {{ .Values.database.auth.database }}
+  user: {{ .Values.database.auth.username }}
   host: {{ include "villas.fullname" . }}-database
-  user: {{ .Values.database.postgresqlUsername }}
 {{- else }}
   name: {{ .Values.database.external.name }}
   host: {{ .Values.database.external.hostname }}
