@@ -30,7 +30,7 @@ web:
   sub_title: ""
   contact:
     name: Steffen Vogel
-    mail: svogel2@eonerc.rwth-aachen.de
+    mail: post@steffenvogel.de
 
   metrics:
     enabled: true
