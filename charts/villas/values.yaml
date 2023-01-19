@@ -79,7 +79,7 @@ web:
   backend:
     enabled: true
 
-    image: registry.git.rwth-aachen.de/acs/public/villas/web-backend-go:latest
+    image: registry.git.rwth-aachen.de/acs/public/villas/web-backend:latest
 
   frontend:
     enabled: true
