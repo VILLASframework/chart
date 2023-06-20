@@ -6,39 +6,39 @@ variables:
   DEPLOY_PASS: changme
 
 stages:
-  - test
-  - package
-  - deploy
+- test
+- package
+- deploy
 
 lint:
   image: registry.git.rwth-aachen.de/acs/internal/cloud/kubernetes/deployment
   stage: test
   before_script:
-    - helm version
+  - helm version
   script:
-    - helm lint ${CHART_DIR}/*
+  - helm lint ${CHART_DIR}/*
   tags:
-    - docker
+  - docker
 
 repo:
   image: registry.git.rwth-aachen.de/acs/internal/cloud/kubernetes/deployment
   stage: package
   script:
-    - mkdir -p ./public
-    - wget ${DEPLOY_URL}/index.yaml -O ./public/index.yaml
-    - helm package
-        --destination ./public
-        ${CHART_DIR}/*
-    - helm repo index
-        --url ${DEPLOY_URL}
-        --merge index.yaml ./public
+  - mkdir -p ./public
+  - wget ${DEPLOY_URL}/index.yaml -O ./public/index.yaml
+  - helm package
+      --destination ./public
+      ${CHART_DIR}/*
+  - helm repo index
+      --url ${DEPLOY_URL}
+      --merge index.yaml ./public
   artifacts:
     paths:
-      - public
+    - public
   only:
-    - master
+  - master
   tags:
-    - docker
+  - docker
 
 upload:
   stage: deploy
@@ -46,14 +46,14 @@ upload:
     name: rclone/rclone:1.50
     entrypoint: [""]
   before_script:
-    - rclone config create fein webdav url ${DEPLOY_PATH} vendor other user ${DEPLOY_USER} pass ${DEPLOY_PASS}
-    - rclone config show
+  - rclone config create fein webdav url ${DEPLOY_PATH} vendor other user ${DEPLOY_USER} pass ${DEPLOY_PASS}
+  - rclone config show
   script:
-    - rclone copy ./public fein:packages/helm/charts
-    - rclone copy ./doc/pictures/logos fein:packages/helm/icons
+  - rclone copy ./public fein:packages/helm/charts
+  - rclone copy ./doc/pictures/logos fein:packages/helm/icons
   dependencies:
-    - repo
+  - repo
   tags:
-    - docker
+  - docker
   only:
-    - master
+  - master
