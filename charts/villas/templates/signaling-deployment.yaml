@@ -23,6 +23,12 @@ spec:
       - image: {{ .Values.signaling.image }}
         imagePullPolicy: Always
         name: signaling
+        {{- if .Values.signaling.relays }}
+        args:
+        {{- range $relay := .Values.signaling.relays }}
+        - "-relay={{ $relay }}"
+        {{- end }}
+        {{- end }}
         ports:
         - containerPort: 8080
           name: http

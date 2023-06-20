@@ -145,7 +145,6 @@ node:
 
         server: wss://villas.k8s.eonerc.rwth-aachen.de/ws/signaling
         session: signal-demo
-        wait: false
 
       ws_lo:
         type: websocket
@@ -181,6 +180,9 @@ signaling:
   enabled: true
 
   image: registry.git.rwth-aachen.de/acs/public/villas/signaling:latest
+  relays:
+  - "stun:stun.0l.de"
+
 
 relay:
   enabled: true
