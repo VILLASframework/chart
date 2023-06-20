@@ -23,6 +23,7 @@ spec:
       - image: {{ .Values.signaling.image }}
         imagePullPolicy: Always
         name: signaling
+        command: ["/server"]
         {{- if .Values.signaling.relays }}
         args:
         {{- range $relay := .Values.signaling.relays }}

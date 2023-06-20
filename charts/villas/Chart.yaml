@@ -6,7 +6,7 @@ icon: https://packages.fein-aachen.org/helm/icons/villas_framework.png
 
 type: application
 
-version: 0.15.0
+version: 0.15.1
 appVersion: 1.18.3
 
 maintainers:
