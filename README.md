@@ -1,30 +1,32 @@
-# Catalogue
+# VILLASframework Helm Chart
 
-Software project kubernetes files and charts
+[![build status](https://git.rwth-aachen.de/acs/public/villas/chart/badges/master/pipeline.svg)](https://git.rwth-aachen.de/acs/public/villas/chart/-/pipelines/)
 
-The [documentation](https://git.rwth-aachen.de/acs/public/catalogue/-/blob/doc/doc/README.md) is in progress.
+This Git repo contains a [Helm](https://helm.sh/) chart for deploying a full-featured VILLASframework setup to a Kubernetes cluster.
 
-## Structure
+## Documentation
 
-- `charts/` Helm charts
-  - `component1/` A directory per component
-    - `README.md` A description of this component including a description of all parameters
-- `compose/` docker-compose.yml files
-  - *(same structure as in `charts/`)*
-- `kubernetes/` Raw Kubernetes YAML resource files
-  - *(same structure as in `charts/`)*
-- `images/` Custom Dockerfiles for projects which do not provide their own (build via CI)
-  - `Makefile` to build all images
-  - `project1/`
-    - `Dockerfile`
+An quick-start guide for deploying this Helm chart on a Minikube cluster can be found in the VILLASframework documentation:
 
+- https://villas.fein-aachen.org/docs/installation
 
-## Helm Charts
+## Copyright
 
-### Usage
+- 2018-2023 Steffen Vogel <post@steffenvogel.de>
 
-```bash
-helm repo add fein https://packages.fein-aachen.org/helm/charts/
-helm repo update
-helm install -f values.yaml villas fein/villas
-```
+## License
+
+This project is released under the terms of the [Apache 2.0](LICENSE) license:
+
+- SPDX-FileCopyrightText: 2018-2023 Steffen Vogel <post@steffenvogel.de>
+- SPDX-License-Identifier: Apache-2.0
+
+## Contact
+
+[![EONERC ACS Logo](doc/pictures/eonerc_logo.png)](http://www.acs.eonerc.rwth-aachen.de)
+
+- Steffen Vogel <post@steffenvogel.de>
+
+[Institute for Automation of Complex Power Systems (ACS)](http://www.acs.eonerc.rwth-aachen.de)
+[EON Energy Research Center (EONERC)](http://www.eonerc.rwth-aachen.de)
+[RWTH University Aachen, Germany](http://www.rwth-aachen.de)
