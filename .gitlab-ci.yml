@@ -25,13 +25,13 @@ repo:
   stage: package
   script:
   - mkdir -p ./public
-  - wget ${DEPLOY_URL}/index.yaml -O ./public/index.yaml
+  - wget ${DEPLOY_URL}/index.yaml -O old-index.yaml
   - helm package
       --destination ./public
       ${CHART_DIR}/*
   - helm repo index
       --url ${DEPLOY_URL}
-      --merge index.yaml ./public
+      --merge old-index.yaml ./public
   artifacts:
     paths:
     - public
@@ -43,14 +43,14 @@ repo:
 upload:
   stage: deploy
   image:
-    name: rclone/rclone:1.50
+    name: rclone/rclone:1.62
     entrypoint: [""]
   before_script:
   - rclone config create fein webdav url ${DEPLOY_PATH} vendor other user ${DEPLOY_USER} pass ${DEPLOY_PASS}
   - rclone config show
   script:
-  - rclone copy ./public fein:packages/helm/charts
-  - rclone copy ./doc/pictures/logos fein:packages/helm/icons
+  - rclone copy -P ./public fein:packages/helm/charts
+  - rclone copy -P ./doc/pictures/logos fein:packages/helm/icons
   dependencies:
   - repo
   tags:
