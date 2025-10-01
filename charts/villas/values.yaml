@@ -83,6 +83,7 @@ web:
 
   frontend:
     enabled: true
+    branding: villasweb
 
     image: registry.git.rwth-aachen.de/acs/public/villas/web:latest
     replicas: 2

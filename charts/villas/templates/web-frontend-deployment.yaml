@@ -36,4 +36,7 @@ spec:
           periodSeconds: 3
           successThreshold: 1
           timeoutSeconds: 1
+        env:
+          - name: REACT_APP_BRAND
+            value: "{{ .Values.web.frontend.branding | default "villasweb" }}"
 {{ end }}
