@@ -1,12 +1,12 @@
 dependencies:
 - name: rabbitmq
-  repository: https://charts.bitnami.com/bitnami
-  version: 10.3.6
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami
-  version: 11.9.1
+  repository: oci://registry-1.docker.io/cloudpirates
+  version: 0.3.2
+- name: postgres
+  repository: oci://registry-1.docker.io/cloudpirates
+  version: 0.7.3
 - name: minio
   repository: https://charts.bitnami.com/bitnami
   version: 11.10.3
-digest: sha256:402fe7dacea276f5fb96caa8e4837bcb6309d3bb2e41dc7113adfaaf78ca6e66
-generated: "2022-09-28T11:25:46.960695+02:00"
+digest: sha256:0e95383933f3249335bb0b5e6b72b45763dc9fd078e3d86a37bf46e910c51de3
+generated: "2025-10-09T13:47:55.981685779Z"

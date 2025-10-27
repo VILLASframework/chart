@@ -57,24 +57,19 @@ web:
       # password: changeme
 
     external:
-      enabled: false
+      enabled: true
 
       client_id: villas
-      client_secret: "Ho0Zeilahxoh3Cae0ao9rieHooL1oonah0nash6aiNae7phaiceeCoo9Eesh6tei"
-
+      pkce_method: S256
+      client_secret: ff
       cookie_secret: "ohth8iin6QuiequeGu5tiengizip4eid"
-
       # email_domains:
       # - "*"
       # allowed_groups:
       # - student
-
-      provider: jupyterhub
-      provider_name: JupyterHub
-
-      login_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/authorize
-      redeem_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/token
-      validate_url: https://jupyter.k8s.eonerc.rwth-aachen.de/hub/api/oauth2/validate
+      provider_name: keycloak
+      provider: oidc
+      issuer_url: https://keycloak.k8s.eonerc.rwth-aachen.de/realms/s-dev-realm
 
   backend:
     enabled: true
@@ -91,7 +86,7 @@ proxy:
   image: quay.io/oauth2-proxy/oauth2-proxy
 
   extraEnv:
-    OAUTH2_PROXY_JUPYTERHUB_URL: https://jupyter.k8s.eonerc.rwth-aachen.de
+    OAUTH2_PROXY_SILENCE_PING_LOGGING: true
 
 node:
   enabled: true
@@ -222,6 +217,8 @@ controller:
   extraConfig: {}
 
 database:
+  image:
+    tag: 14.5-bullseye
   # Set to false for using an external broker
   # If so, provide the connection details in broker.external
   enabled: true
