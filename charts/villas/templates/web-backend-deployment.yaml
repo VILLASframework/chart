@@ -51,7 +51,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ include "database.secretName" . }}
-              key: password
+              key: postgres-password
 {{- else }}
           value: {{ .Values.database.external.password | quote }}
 {{- end }}
@@ -60,7 +60,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ include "broker.secretName" . }}
-              key: rabbitmq-password
+              key: password
 {{- else }}
           value: {{ .Values.broker.external.password | quote }}
 {{- end }}

@@ -16,14 +16,14 @@ maintainers:
 
 dependencies:
   - name: rabbitmq
-    version: 10.3.6
-    repository: "https://charts.bitnami.com/bitnami"
+    version: 0.3.2
+    repository: "oci://registry-1.docker.io/cloudpirates"
     condition: "broker.enabled"
     alias: broker
 
-  - name: postgresql
-    version: 11.9.1
-    repository: "https://charts.bitnami.com/bitnami"
+  - name: postgres
+    version: 0.7.3
+    repository: "oci://registry-1.docker.io/cloudpirates"
     condition: "database.enabled"
     alias: database
 

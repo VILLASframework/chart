@@ -46,7 +46,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ include "broker.secretName" . }}
-              key: rabbitmq-password
+              key: password
 {{- else }}
         - name: AMQP_USER
           value: {{ .Values.broker.external.username | quote }}

@@ -222,6 +222,8 @@ controller:
   extraConfig: {}
 
 database:
+  image:
+    tag: 14.5-bullseye
   # Set to false for using an external broker
   # If so, provide the connection details in broker.external
   enabled: true
